@@ -26,18 +26,15 @@
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;-webkit-tap-highlight-color:transparent}
 
-/* Nav */
 nav{background:var(--primary);color:#fff;padding:0 .75rem;display:flex;align-items:center;gap:.25rem;height:54px;box-shadow:0 2px 4px rgba(0,0,0,.15);position:sticky;top:0;z-index:50}
 nav .logo{font-weight:700;font-size:1rem;margin-right:auto;display:flex;align-items:center;gap:.4rem}
 nav button{background:rgba(255,255,255,.1);color:rgba(255,255,255,.8);border:none;padding:.4rem .65rem;border-radius:6px;cursor:pointer;font-size:.8rem;font-weight:500;transition:all .15s}
 nav button:hover,nav button.active{background:rgba(255,255,255,.25);color:#fff}
 
-/* Layout */
 main{max-width:960px;margin:0 auto;padding:1.25rem}
 h1{font-size:1.4rem;margin-bottom:1rem}
 h2{font-size:1.1rem;margin-bottom:.6rem}
 
-/* Cards */
 .card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.1rem;margin-bottom:.85rem;box-shadow:0 1px 3px rgba(0,0,0,.05)}
 .card-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:.6rem;margin-bottom:.75rem}
 .stat-value{font-size:1.8rem;font-weight:700;color:var(--primary)}
@@ -47,7 +44,6 @@ h2{font-size:1.1rem;margin-bottom:.6rem}
 .stat-up{color:var(--success)}
 .stat-down{color:var(--danger)}
 
-/* Buttons */
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:.3rem;padding:.5rem 1rem;border:none;border-radius:8px;font-size:.88rem;font-weight:500;cursor:pointer;text-decoration:none;transition:all .15s}
 .btn:hover{opacity:.88}
 .btn:active{transform:scale(.97)}
@@ -56,22 +52,20 @@ h2{font-size:1.1rem;margin-bottom:.6rem}
 .btn-danger{background:var(--danger);color:#fff}
 .btn-outline{background:transparent;border:1.5px solid var(--border);color:var(--text)}
 .btn-sm{padding:.35rem .7rem;font-size:.8rem}
+.btn-info{background:var(--info);color:#fff}
 
-/* Forms */
 .form-group{margin-bottom:.7rem}
 .form-group label{display:block;font-size:.82rem;font-weight:600;margin-bottom:.2rem;color:var(--text-sec)}
 .form-group input,.form-group textarea,.form-group select{width:100%;padding:.5rem .7rem;border:1.5px solid var(--border);border-radius:8px;font-size:.95rem;font-family:inherit;transition:border-color .15s}
 .form-group input:focus,.form-group textarea:focus,.form-group select:focus{outline:none;border-color:var(--primary)}
 .form-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:.65rem}
 
-/* Collapsible */
 .collapse-toggle{display:flex;align-items:center;gap:.4rem;cursor:pointer;color:var(--primary);font-size:.9rem;font-weight:600;padding:.5rem 0;border:none;background:none}
 .collapse-toggle::before{content:'▶';font-size:.65rem;transition:transform .2s}
 .collapse-toggle.open::before{transform:rotate(90deg)}
 .collapse-content{max-height:0;overflow:hidden;transition:max-height .3s ease}
-.collapse-content.open{max-height:500px}
+.collapse-content.open{max-height:800px}
 
-/* Table */
 .table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 -1.1rem;padding:0 1.1rem}
 table{width:100%;border-collapse:collapse;min-width:480px}
 th,td{padding:.5rem .55rem;text-align:left;border-bottom:1px solid var(--border);font-size:.85rem;white-space:nowrap}
@@ -81,7 +75,6 @@ th{font-size:.72rem;color:var(--text-sec);text-transform:uppercase;letter-spacin
 .clickable{cursor:pointer}
 .clickable:hover{background:#f8f8f8}
 
-/* Shooting */
 .shot-type-tabs{display:flex;gap:.4rem;margin-bottom:.85rem}
 .shot-type-tab{flex:1;padding:.65rem;border:2px solid var(--border);border-radius:10px;background:var(--surface);font-size:.95rem;font-weight:600;cursor:pointer;text-align:center;transition:all .15s}
 .shot-type-tab.active{border-color:var(--primary);background:var(--primary);color:#fff}
@@ -93,21 +86,18 @@ th{font-size:.72rem;color:var(--text-sec);text-transform:uppercase;letter-spacin
 .shot-btn.missed{border-color:var(--danger);color:var(--danger)}
 .shot-btn.missed:hover{background:var(--danger);color:#fff}
 
-/* Shot feedback animation */
 @keyframes shotFlash{0%{opacity:1;transform:scale(1)}50%{opacity:.6;transform:scale(1.05)}100%{opacity:1;transform:scale(1)}}
 .shot-btn.flash{animation:shotFlash .25s ease}
 
 .shot-log{margin-top:.75rem;max-height:220px;overflow-y:auto}
 .shot-log-item{display:flex;justify-content:space-between;padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.82rem}
 
-/* Toast */
 .toast-container{position:fixed;top:64px;right:1rem;z-index:200;display:flex;flex-direction:column;gap:.5rem;pointer-events:none}
 .toast{background:#333;color:#fff;padding:.6rem 1rem;border-radius:8px;font-size:.85rem;opacity:0;transform:translateX(30px);transition:all .3s;pointer-events:auto;max-width:300px}
 .toast.show{opacity:1;transform:translateX(0)}
 .toast.success{background:var(--success)}
 .toast.error{background:var(--danger)}
 
-/* Modal */
 .modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;z-index:100;opacity:0;transition:opacity .2s}
 .modal-overlay.show{opacity:1}
 .modal{background:#fff;border-radius:14px;padding:1.5rem;max-width:420px;width:90%;transform:scale(.9);transition:transform .2s}
@@ -115,7 +105,6 @@ th{font-size:.72rem;color:var(--text-sec);text-transform:uppercase;letter-spacin
 .modal h3{margin-bottom:.75rem;font-size:1.1rem}
 .modal .actions{display:flex;gap:.5rem;justify-content:flex-end;margin-top:1.25rem}
 
-/* Misc */
 .empty{text-align:center;padding:2.5rem 1rem;color:var(--text-sec)}
 .actions{display:flex;gap:.5rem;margin-top:.85rem;flex-wrap:wrap}
 .flex-between{display:flex;justify-content:space-between;align-items:center;margin-bottom:.85rem;gap:.5rem}
@@ -127,15 +116,51 @@ th{font-size:.72rem;color:var(--text-sec);text-transform:uppercase;letter-spacin
 .badge-lose{background:#ffebee;color:var(--danger)}
 .record-display{font-size:.95rem;font-weight:600;margin-left:.5rem}
 
-/* Welcome */
 .welcome-card{text-align:center;padding:2rem 1.5rem}
 .welcome-card h2{font-size:1.3rem;margin-bottom:.5rem}
 .welcome-card p{color:var(--text-sec);margin-bottom:1.5rem}
 .welcome-actions{display:flex;flex-direction:column;gap:.6rem;max-width:280px;margin:0 auto}
 .welcome-actions .btn{justify-content:center;padding:.75rem}
 
-/* Data management */
 .data-section{margin-top:1.5rem;padding-top:1rem;border-top:1px solid var(--border)}
+
+/* Player list */
+.player-item{display:flex;align-items:center;gap:.6rem;padding:.6rem;border:1px solid var(--border);border-radius:8px;margin-bottom:.4rem;cursor:pointer;transition:background .1s}
+.player-item:hover{background:#f8f8f8}
+.player-item.selected{border-color:var(--primary);background:#fff3e0}
+.player-number{background:var(--primary);color:#fff;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.85rem;flex-shrink:0}
+.player-name{font-weight:600;font-size:.9rem}
+.player-actions{margin-left:auto;display:flex;gap:.3rem}
+
+/* Quarter tabs */
+.quarter-tabs{display:flex;gap:.3rem;margin-bottom:.75rem}
+.quarter-tab{flex:1;padding:.45rem;border:2px solid var(--border);border-radius:8px;background:var(--surface);font-size:.85rem;font-weight:600;cursor:pointer;text-align:center;transition:all .15s}
+.quarter-tab.active{border-color:var(--info);background:var(--info);color:#fff}
+
+/* Score sheet table */
+.scoresheet{width:100%;border-collapse:collapse;min-width:0}
+.scoresheet th,.scoresheet td{padding:.4rem .5rem;text-align:center;border:1px solid var(--border);font-size:.82rem}
+.scoresheet th{background:#f5f5f5;font-size:.72rem}
+.scoresheet .total-col{background:#fff3e0;font-weight:700}
+.scoresheet .player-col{text-align:left;font-weight:600;min-width:80px}
+
+/* Court SVG zones */
+.court-container{position:relative;width:100%;max-width:360px;margin:0 auto .75rem}
+.court-svg{width:100%;height:auto}
+.court-zone{fill:rgba(200,200,200,.15);stroke:#999;stroke-width:1.5;cursor:pointer;transition:all .15s}
+.court-zone:hover{fill:rgba(230,81,0,.15)}
+.court-zone.selected{fill:rgba(230,81,0,.3);stroke:var(--primary);stroke-width:2.5}
+.court-zone-label{pointer-events:none;font-size:11px;fill:#555;text-anchor:middle;font-weight:600}
+
+/* Zone stats */
+.zone-stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:.5rem}
+.zone-stat-item{text-align:center;padding:.5rem;border:1px solid var(--border);border-radius:8px}
+.zone-stat-pct{font-size:1.2rem;font-weight:700}
+.zone-stat-label{font-size:.72rem;color:var(--text-sec)}
+.zone-stat-detail{font-size:.75rem;color:var(--text-sec)}
+.pct-high{color:var(--success)}
+.pct-mid{color:var(--primary)}
+.pct-low{color:var(--danger)}
 
 @media(max-width:600px){
   nav .logo{font-size:.9rem}
@@ -155,6 +180,7 @@ th{font-size:.72rem;color:var(--text-sec);text-transform:uppercase;letter-spacin
 <nav>
   <span class="logo">🏀 Stats Tracker</span>
   <button onclick="showPage('dashboard')" id="nav-dashboard">ホーム</button>
+  <button onclick="showPage('players')" id="nav-players">選手</button>
   <button onclick="showPage('games')" id="nav-games">試合</button>
   <button onclick="showPage('shooting')" id="nav-shooting">シュート</button>
   <button onclick="showPage('stats')" id="nav-stats">統計</button>
@@ -162,35 +188,52 @@ th{font-size:.72rem;color:var(--text-sec);text-transform:uppercase;letter-spacin
 <div class="toast-container" id="toast-container"></div>
 <main id="app"></main>
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
 <script>
 // ========== Data Layer ==========
+const ZONES = {
+  paint: 'ペイント', mid_left: 'ミドル左', mid_right: 'ミドル右',
+  mid_top: 'ミドル正面', three_left: '3PT左', three_right: '3PT右', three_top: '3PTトップ'
+};
+
 const DB = {
   _get(k) { try { return JSON.parse(localStorage.getItem('bball_' + k) || '[]'); } catch { return []; } },
   _set(k, v) { localStorage.setItem('bball_' + k, JSON.stringify(v)); },
   _nextId(k) { const items = this._get(k); return items.length ? Math.max(...items.map(i => i.id)) + 1 : 1; },
 
+  // Players
+  getPlayers() { return this._get('players').sort((a, b) => a.number - b.number); },
+  getPlayer(id) { return this._get('players').find(p => p.id === id); },
+  savePlayer(p) {
+    const players = this._get('players');
+    if (p.id) { const i = players.findIndex(x => x.id === p.id); if (i >= 0) players[i] = p; }
+    else { p.id = this._nextId('players'); players.push(p); }
+    this._set('players', players); return p.id;
+  },
+  deletePlayer(id) { this._set('players', this._get('players').filter(p => p.id !== id)); },
+
+  // Games
   getGames() { return this._get('games').sort((a, b) => b.date.localeCompare(a.date)); },
   getGame(id) { return this._get('games').find(g => g.id === id); },
   saveGame(game) {
     const games = this._get('games');
     if (game.id) { const i = games.findIndex(g => g.id === game.id); if (i >= 0) games[i] = game; }
     else { game.id = this._nextId('games'); games.push(game); }
-    this._set('games', games);
-    return game.id;
+    this._set('games', games); return game.id;
   },
   deleteGame(id) {
     this._set('games', this._get('games').filter(g => g.id !== id));
     this._set('shots', this._get('shots').filter(s => s.game_id !== id));
   },
 
+  // Shots (now with zone, player_id, quarter)
   getShots(gid) { const s = this._get('shots'); return gid != null ? s.filter(x => x.game_id === gid) : s; },
   addShot(shot) {
     const shots = this._get('shots');
     shot.id = this._nextId('shots');
     shot.created_at = new Date().toISOString();
     shots.push(shot);
-    this._set('shots', shots);
-    return shot.id;
+    this._set('shots', shots); return shot.id;
   },
   deleteShot(id) { this._set('shots', this._get('shots').filter(s => s.id !== id)); },
 
@@ -209,6 +252,17 @@ const DB = {
     const fgS = shots.filter(s => s.shot_type !== 'ft');
     const fgM = fgS.filter(s => s.made).length;
     return { by_type: result, field_goal: { total: fgS.length, made: fgM, percentage: fgS.length ? +(fgM / fgS.length * 100).toFixed(1) : null } };
+  },
+
+  getZoneStats(gameId) {
+    let shots = this._get('shots').filter(s => s.zone && s.shot_type !== 'ft');
+    if (gameId != null) shots = shots.filter(s => s.game_id === gameId);
+    const byZone = {};
+    for (const z of Object.keys(ZONES)) byZone[z] = { total: 0, made: 0 };
+    for (const s of shots) {
+      if (byZone[s.zone]) { byZone[s.zone].total++; if (s.made) byZone[s.zone].made++; }
+    }
+    return byZone;
   },
 
   getAverages() {
@@ -248,33 +302,41 @@ const DB = {
   },
 
   exportAll() {
-    return JSON.stringify({ games: this._get('games'), shots: this._get('shots'), exported_at: new Date().toISOString() }, null, 2);
+    return JSON.stringify({ games: this._get('games'), shots: this._get('shots'), players: this._get('players'), exported_at: new Date().toISOString() }, null, 2);
   },
   importAll(json) {
     const data = JSON.parse(json);
-    if (!data.games || !data.shots) throw new Error('Invalid data format');
+    if (!data.games || !data.shots) throw new Error('Invalid');
     this._set('games', data.games);
     this._set('shots', data.shots);
+    if (data.players) this._set('players', data.players);
   },
   loadSample() {
+    const players = [
+      { id:1, name:'田中太郎', number:7 },
+      { id:2, name:'鈴木一朗', number:11 },
+      { id:3, name:'佐藤花子', number:4 },
+    ];
+    const zoneKeys = Object.keys(ZONES);
     const games = [
-      { id:1, date:'2026-03-01', opponent:'Eagles', my_score:78, opponent_score:72, minutes_played:32, notes:'', stats:{points:18,rebounds:5,assists:4,steals:2,blocks:1,turnovers:3,fouls:2} },
-      { id:2, date:'2026-03-05', opponent:'Hawks', my_score:65, opponent_score:70, minutes_played:28, notes:'', stats:{points:12,rebounds:3,assists:6,steals:1,blocks:0,turnovers:4,fouls:3} },
-      { id:3, date:'2026-03-10', opponent:'Wolves', my_score:82, opponent_score:75, minutes_played:35, notes:'', stats:{points:22,rebounds:7,assists:5,steals:3,blocks:2,turnovers:2,fouls:1} },
+      { id:1, date:'2026-03-01', opponent:'Eagles', my_score:78, opponent_score:72, minutes_played:32, notes:'', quarters:[18,22,16,22], stats:{points:18,rebounds:5,assists:4,steals:2,blocks:1,turnovers:3,fouls:2} },
+      { id:2, date:'2026-03-05', opponent:'Hawks', my_score:65, opponent_score:70, minutes_played:28, notes:'', quarters:[14,18,15,18], stats:{points:12,rebounds:3,assists:6,steals:1,blocks:0,turnovers:4,fouls:3} },
+      { id:3, date:'2026-03-10', opponent:'Wolves', my_score:82, opponent_score:75, minutes_played:35, notes:'', quarters:[20,24,18,20], stats:{points:22,rebounds:7,assists:5,steals:3,blocks:2,turnovers:2,fouls:1} },
     ];
     const shots = [];
     let sid = 1;
     for (const g of games) {
-      for (let i = 0; i < 8; i++) shots.push({ id: sid++, game_id: g.id, shot_type: '2pt', made: Math.random() > .4 ? 1 : 0, created_at: g.date });
-      for (let i = 0; i < 5; i++) shots.push({ id: sid++, game_id: g.id, shot_type: '3pt', made: Math.random() > .6 ? 1 : 0, created_at: g.date });
-      for (let i = 0; i < 4; i++) shots.push({ id: sid++, game_id: g.id, shot_type: 'ft', made: Math.random() > .2 ? 1 : 0, created_at: g.date });
+      for (let i = 0; i < 8; i++) shots.push({ id: sid++, game_id: g.id, shot_type: '2pt', made: Math.random() > .4 ? 1 : 0, zone: zoneKeys[Math.floor(Math.random()*3)], quarter: (i%4)+1, player_id: players[i%3].id, created_at: g.date });
+      for (let i = 0; i < 5; i++) shots.push({ id: sid++, game_id: g.id, shot_type: '3pt', made: Math.random() > .6 ? 1 : 0, zone: zoneKeys[3+Math.floor(Math.random()*4)], quarter: (i%4)+1, player_id: players[i%3].id, created_at: g.date });
+      for (let i = 0; i < 4; i++) shots.push({ id: sid++, game_id: g.id, shot_type: 'ft', made: Math.random() > .2 ? 1 : 0, zone: null, quarter: (i%4)+1, player_id: players[i%3].id, created_at: g.date });
     }
+    this._set('players', players);
     this._set('games', games);
     this._set('shots', shots);
   }
 };
 
-// ========== Toast ==========
+// ========== Toast / Modal / Helpers ==========
 function toast(msg, type = '') {
   const c = document.getElementById('toast-container');
   const el = document.createElement('div');
@@ -285,7 +347,6 @@ function toast(msg, type = '') {
   setTimeout(() => { el.classList.remove('show'); setTimeout(() => el.remove(), 300); }, 2200);
 }
 
-// ========== Modal ==========
 function showModal(title, msg, onConfirm) {
   const overlay = document.createElement('div');
   overlay.className = 'modal-overlay';
@@ -299,10 +360,20 @@ function showModal(title, msg, onConfirm) {
   overlay.addEventListener('click', e => { if (e.target === overlay) close(); });
 }
 
+function esc(s) { const d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML; }
+function pct(made, total) { return total ? (made / total * 100).toFixed(1) : '-'; }
+function diff(cur, prev) {
+  if (cur == null || prev == null) return '';
+  const d = cur - prev;
+  if (d === 0) return '';
+  return `<span class="${d > 0 ? 'stat-up' : 'stat-down'}">${d > 0 ? '▲' : '▼'}${Math.abs(d)}</span>`;
+}
+function pctColor(v) { return v >= 50 ? 'pct-high' : v >= 35 ? 'pct-mid' : 'pct-low'; }
+
 // ========== Page Router ==========
 let currentPage = 'dashboard';
 let charts = [];
-let shootingState = { type: '2pt', log: [], gameId: null };
+let shootingState = { type: '2pt', zone: null, log: [], gameId: null, playerId: null, quarter: null };
 
 function destroyCharts() { charts.forEach(c => c.destroy()); charts = []; }
 
@@ -311,31 +382,71 @@ function showPage(page, data) {
   currentPage = page;
   document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
   const base = page.replace(/-.*/, '');
-  const navMap = { dashboard: 'nav-dashboard', games: 'nav-games', game: 'nav-games', shooting: 'nav-shooting', stats: 'nav-stats' };
+  const navMap = { dashboard:'nav-dashboard', players:'nav-players', games:'nav-games', game:'nav-games', shooting:'nav-shooting', stats:'nav-stats' };
   const btn = document.getElementById(navMap[base]);
   if (btn) btn.classList.add('active');
   window.scrollTo(0, 0);
-
   const app = document.getElementById('app');
   switch (page) {
     case 'dashboard': app.innerHTML = renderDashboard(); initDashboardCharts(); break;
+    case 'players': app.innerHTML = renderPlayers(); break;
     case 'games': app.innerHTML = renderGameList(); break;
     case 'game-new': app.innerHTML = renderGameForm(); break;
     case 'game-edit': app.innerHTML = renderGameForm(data); break;
     case 'game-detail': app.innerHTML = renderGameDetail(data); break;
+    case 'game-live': app.innerHTML = renderGameLive(data); break;
     case 'shooting': app.innerHTML = renderShooting(); restoreShootingState(); break;
     case 'stats': app.innerHTML = renderStats(); initStatsCharts(); break;
   }
 }
 
-// ========== Helpers ==========
-function esc(s) { const d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML; }
-function pct(made, total) { return total ? (made / total * 100).toFixed(1) : '-'; }
-function diff(cur, prev) {
-  if (cur == null || prev == null) return '';
-  const d = cur - prev;
-  if (d === 0) return '';
-  return `<span class="${d > 0 ? 'stat-up' : 'stat-down'}">${d > 0 ? '▲' : '▼'}${Math.abs(d)}</span>`;
+// ========== Players ==========
+function renderPlayers() {
+  const players = DB.getPlayers();
+  const list = players.map(p => `
+    <div class="player-item">
+      <div class="player-number">${p.number}</div>
+      <div class="player-name">${esc(p.name)}</div>
+      <div class="player-actions">
+        <button class="btn btn-outline btn-sm" onclick="editPlayer(${p.id})">編集</button>
+        <button class="btn btn-danger btn-sm" onclick="confirmDeletePlayer(${p.id})">削除</button>
+      </div>
+    </div>`).join('');
+
+  return `<div class="flex-between">
+    <h1 style="margin:0">選手管理</h1>
+    <button class="btn btn-primary btn-sm" onclick="showPlayerForm()">+ 選手追加</button>
+  </div>
+  <div id="player-form-area"></div>
+  ${players.length ? `<div class="card">${list}</div>` : '<div class="empty">選手が登録されていません。</div>'}`;
+}
+
+function showPlayerForm(playerId) {
+  const p = playerId ? DB.getPlayer(playerId) : null;
+  document.getElementById('player-form-area').innerHTML = `
+    <div class="card">
+      <h2>${p ? '選手を編集' : '選手を追加'}</h2>
+      <div class="form-row">
+        <div class="form-group"><label>背番号</label><input type="number" min="0" max="99" id="pf-number" value="${p?.number??''}" required></div>
+        <div class="form-group"><label>名前</label><input type="text" id="pf-name" value="${esc(p?.name||'')}" required></div>
+      </div>
+      <div class="actions">
+        <button class="btn btn-primary" onclick="savePlayerForm(${playerId||'null'})">${p?'更新':'追加'}</button>
+        <button class="btn btn-outline" onclick="document.getElementById('player-form-area').innerHTML=''">キャンセル</button>
+      </div>
+    </div>`;
+}
+function editPlayer(id) { showPlayerForm(id); }
+function savePlayerForm(id) {
+  const name = document.getElementById('pf-name').value.trim();
+  const number = Number(document.getElementById('pf-number').value) || 0;
+  if (!name) { toast('名前を入力してください', 'error'); return; }
+  DB.savePlayer({ id, name, number });
+  toast(id ? '更新しました' : '追加しました', 'success');
+  showPage('players');
+}
+function confirmDeletePlayer(id) {
+  showModal('選手を削除', 'この選手を削除しますか？', () => { DB.deletePlayer(id); toast('削除しました'); showPage('players'); });
 }
 
 // ========== Dashboard ==========
@@ -349,13 +460,13 @@ function renderDashboard() {
   const fgPct = shooting.field_goal?.percentage;
   const threePct = shooting.by_type.find(s => s.shot_type === '3pt')?.percentage;
 
-  // First time? Show welcome
   if (!games.length && !DB._get('shots').length) {
     return `<div class="card welcome-card">
       <h2>🏀 Basketball Stats Tracker へようこそ！</h2>
       <p>試合の記録やシュートの成功率を管理して、プレイの改善に役立てましょう。</p>
       <div class="welcome-actions">
-        <button class="btn btn-primary" onclick="showPage('game-new')">最初の試合を記録する</button>
+        <button class="btn btn-primary" onclick="showPage('players')">まず選手を登録する</button>
+        <button class="btn btn-outline" onclick="showPage('game-new')">試合を記録する</button>
         <button class="btn btn-outline" onclick="showPage('shooting')">シュート練習を記録する</button>
         <button class="btn btn-outline" onclick="DB.loadSample();toast('サンプルデータを読み込みました','success');showPage('dashboard')">サンプルデータで試す</button>
       </div>
@@ -363,7 +474,6 @@ function renderDashboard() {
   }
 
   const ptsDiff = (current && prev) ? diff(current.stats?.points, prev.stats?.points) : '';
-
   let gameRows = recent.map(g => {
     const r = g.my_score > g.opponent_score ? 'W' : g.my_score < g.opponent_score ? 'L' : '-';
     const cls = r === 'W' ? 'win' : r === 'L' ? 'lose' : '';
@@ -402,8 +512,10 @@ function renderGameList() {
   let rows = games.map(g => {
     const r = g.my_score > g.opponent_score ? 'W' : g.my_score < g.opponent_score ? 'L' : '-';
     const cls = r === 'W' ? 'win' : r === 'L' ? 'lose' : '';
+    const qStr = g.quarters ? g.quarters.join('-') : '';
     return `<tr class="clickable" onclick="showPage('game-detail',${g.id})">
       <td>${g.date}</td><td>${esc(g.opponent)}</td><td>${g.my_score}-${g.opponent_score}</td>
+      <td style="font-size:.78rem;color:var(--text-sec)">${qStr}</td>
       <td>${g.stats?.points??'-'}</td><td>${g.stats?.rebounds??'-'}</td><td>${g.stats?.assists??'-'}</td>
       <td class="${cls}">${r}</td></tr>`;
   }).join('');
@@ -411,7 +523,7 @@ function renderGameList() {
   return `<div class="flex-between">
       <h1 style="margin:0">試合一覧 <span class="record-display"><span class="win">${record.wins}勝</span> <span class="lose">${record.losses}敗</span></span></h1>
       <button class="btn btn-primary btn-sm" onclick="showPage('game-new')">+ 新しい試合</button></div>
-    ${games.length ? `<div class="card"><div class="table-wrap"><table><thead><tr><th>日付</th><th>対戦</th><th>スコア</th><th>得点</th><th>REB</th><th>AST</th><th>結果</th></tr></thead><tbody>${rows}</tbody></table></div></div>`
+    ${games.length ? `<div class="card"><div class="table-wrap"><table><thead><tr><th>日付</th><th>対戦</th><th>スコア</th><th>Q</th><th>得点</th><th>REB</th><th>AST</th><th>結果</th></tr></thead><tbody>${rows}</tbody></table></div></div>`
     : '<div class="empty">まだ試合が記録されていません。</div>'}`;
 }
 
@@ -421,6 +533,7 @@ function renderGameForm(gameId) {
   const isEdit = !!g;
   const today = new Date().toISOString().split('T')[0];
   const s = g?.stats || {};
+  const q = g?.quarters || [0,0,0,0];
 
   return `<span class="back-link" onclick="showPage('${isEdit?'game-detail':'games'}'${isEdit?','+gameId:''})">← 戻る</span>
     <h1>${isEdit ? '試合を編集' : '新しい試合'}</h1>
@@ -434,8 +547,17 @@ function renderGameForm(gameId) {
         <div class="form-group"><label>相手スコア</label><input type="number" min="0" id="f-opp-score" value="${g?.opponent_score??''}"></div>
         <div class="form-group"><label>出場時間（分）</label><input type="number" min="0" id="f-minutes" value="${g?.minutes_played??''}"></div>
       </div>
+      <h2 style="margin-top:.75rem">クォーター別スコア（自チーム）</h2>
+      <div class="form-row" style="margin-bottom:.75rem">
+        <div class="form-group"><label>Q1</label><input type="number" min="0" id="f-q1" value="${q[0]||''}" onchange="updateQuarterTotal()"></div>
+        <div class="form-group"><label>Q2</label><input type="number" min="0" id="f-q2" value="${q[1]||''}" onchange="updateQuarterTotal()"></div>
+        <div class="form-group"><label>Q3</label><input type="number" min="0" id="f-q3" value="${q[2]||''}" onchange="updateQuarterTotal()"></div>
+        <div class="form-group"><label>Q4</label><input type="number" min="0" id="f-q4" value="${q[3]||''}" onchange="updateQuarterTotal()"></div>
+      </div>
+      <div id="quarter-total" style="font-size:.85rem;color:var(--text-sec);margin-bottom:.5rem"></div>
+      <h2>個人スタッツ</h2>
       <div class="form-row">
-        <div class="form-group"><label>個人得点</label><input type="number" min="0" id="f-pts" value="${s.points??''}"></div>
+        <div class="form-group"><label>得点</label><input type="number" min="0" id="f-pts" value="${s.points??''}"></div>
         <div class="form-group"><label>リバウンド</label><input type="number" min="0" id="f-reb" value="${s.rebounds??''}"></div>
         <div class="form-group"><label>アシスト</label><input type="number" min="0" id="f-ast" value="${s.assists??''}"></div>
       </div>
@@ -456,17 +578,23 @@ function renderGameForm(gameId) {
     </form>`;
 }
 
-function toggleCollapse(btn) {
-  btn.classList.toggle('open');
-  const content = btn.nextElementSibling;
-  content.classList.toggle('open');
+function toggleCollapse(btn) { btn.classList.toggle('open'); btn.nextElementSibling.classList.toggle('open'); }
+
+function updateQuarterTotal() {
+  const q1 = Number(document.getElementById('f-q1').value)||0;
+  const q2 = Number(document.getElementById('f-q2').value)||0;
+  const q3 = Number(document.getElementById('f-q3').value)||0;
+  const q4 = Number(document.getElementById('f-q4').value)||0;
+  const total = q1+q2+q3+q4;
+  document.getElementById('quarter-total').textContent = total ? `合計: ${total}点` : '';
 }
 
 function saveGame(e, existingId) {
   e.preventDefault();
   const v = id => document.getElementById(id).value;
   const n = id => Number(v(id)) || 0;
-  const game = { id: existingId, date: v('f-date'), opponent: v('f-opponent'), my_score: n('f-my-score'), opponent_score: n('f-opp-score'), minutes_played: n('f-minutes'), notes: v('f-notes'),
+  const quarters = [n('f-q1'), n('f-q2'), n('f-q3'), n('f-q4')];
+  const game = { id: existingId, date: v('f-date'), opponent: v('f-opponent'), my_score: n('f-my-score'), opponent_score: n('f-opp-score'), minutes_played: n('f-minutes'), notes: v('f-notes'), quarters,
     stats: { points: n('f-pts'), rebounds: n('f-reb'), assists: n('f-ast'), steals: n('f-stl'), blocks: n('f-blk'), turnovers: n('f-to'), fouls: n('f-fls') } };
   const id = DB.saveGame(game);
   toast(existingId ? '試合を更新しました' : '試合を保存しました', 'success');
@@ -482,8 +610,6 @@ function renderGameDetail(gameId) {
   const badge = res === 'W' ? 'badge badge-win' : res === 'L' ? 'badge badge-lose' : '';
   const s = g.stats || {};
   const shots = DB.getShots(gameId);
-
-  // Previous game comparison
   const allGames = DB.getGames();
   const idx = allGames.findIndex(x => x.id === gameId);
   const prev = idx < allGames.length - 1 ? allGames[idx + 1] : null;
@@ -496,17 +622,34 @@ function renderGameDetail(gameId) {
   };
 
   const statRow = (label, val, prevVal) => `<div><div class="stat-label">${label}</div><div class="stat-value stat-sm">${val ?? '-'}</div><div class="stat-sub">${diff(val, prevVal)}</div></div>`;
-
   const statCards = [
-    statRow('得点', s.points, prev?.stats?.points),
-    statRow('リバウンド', s.rebounds, prev?.stats?.rebounds),
-    statRow('アシスト', s.assists, prev?.stats?.assists),
-    statRow('スティール', s.steals, prev?.stats?.steals),
-    statRow('ブロック', s.blocks, prev?.stats?.blocks),
-    statRow('ターンオーバー', s.turnovers, prev?.stats?.turnovers),
-    statRow('ファウル', s.fouls, prev?.stats?.fouls),
-    statRow('出場時間', g.minutes_played, prev?.minutes_played),
+    statRow('得点', s.points, prev?.stats?.points), statRow('リバウンド', s.rebounds, prev?.stats?.rebounds),
+    statRow('アシスト', s.assists, prev?.stats?.assists), statRow('スティール', s.steals, prev?.stats?.steals),
+    statRow('ブロック', s.blocks, prev?.stats?.blocks), statRow('ターンオーバー', s.turnovers, prev?.stats?.turnovers),
+    statRow('ファウル', s.fouls, prev?.stats?.fouls), statRow('出場時間', g.minutes_played, prev?.minutes_played),
   ].join('');
+
+  // Quarter score sheet
+  let quarterHTML = '';
+  if (g.quarters && g.quarters.some(q => q > 0)) {
+    quarterHTML = `<div class="card"><h2>クォーター別スコア</h2>
+      <table class="scoresheet"><thead><tr><th></th><th>Q1</th><th>Q2</th><th>Q3</th><th>Q4</th><th class="total-col">合計</th></tr></thead>
+      <tbody><tr><td class="player-col">${esc(g.opponent)||'自チーム'}</td>
+      ${g.quarters.map(q=>`<td>${q}</td>`).join('')}
+      <td class="total-col">${g.quarters.reduce((a,b)=>a+b,0)}</td></tr></tbody></table></div>`;
+  }
+
+  // Zone stats for this game
+  const zoneStats = DB.getZoneStats(gameId);
+  const hasZones = Object.values(zoneStats).some(z => z.total > 0);
+  let zoneHTML = '';
+  if (hasZones) {
+    const items = Object.entries(zoneStats).filter(([,v]) => v.total > 0).map(([k,v]) => {
+      const p = v.total ? +(v.made/v.total*100).toFixed(1) : 0;
+      return `<div class="zone-stat-item"><div class="zone-stat-label">${ZONES[k]}</div><div class="zone-stat-pct ${pctColor(p)}">${p}%</div><div class="zone-stat-detail">${v.made}/${v.total}</div></div>`;
+    }).join('');
+    zoneHTML = `<div class="card"><h2>ゾーン別成功率</h2><div class="zone-stats-grid">${items}</div></div>`;
+  }
 
   return `<span class="back-link" onclick="showPage('games')">← 試合一覧に戻る</span>
     <div class="flex-between">
@@ -514,13 +657,16 @@ function renderGameDetail(gameId) {
       <span><span class="${badge}">${res}</span> <span class="${cls}" style="font-size:1.3rem;font-weight:700">${g.my_score}-${g.opponent_score}</span></span>
     </div>
     ${prev ? '<p style="font-size:.8rem;color:var(--text-sec);margin-bottom:.75rem">※前回比を表示しています</p>' : ''}
+    ${quarterHTML}
     <div class="card"><h2>個人スタッツ</h2><div class="card-grid">${statCards}</div></div>
     ${shots.length ? `<div class="card"><h2>シュート</h2><div class="card-grid">
       <div><div class="stat-label">2PT</div><div style="font-weight:600">${shotSummary('2pt')}</div></div>
       <div><div class="stat-label">3PT</div><div style="font-weight:600">${shotSummary('3pt')}</div></div>
       <div><div class="stat-label">FT</div><div style="font-weight:600">${shotSummary('ft')}</div></div></div></div>` : ''}
+    ${zoneHTML}
     ${g.notes ? `<div class="card"><h2>メモ</h2><p>${esc(g.notes)}</p></div>` : ''}
     <div class="actions">
+      <button class="btn btn-info" onclick="showPage('game-live',${gameId})">ライブ記録</button>
       <button class="btn btn-primary" onclick="showPage('game-edit',${gameId})">編集</button>
       <button class="btn btn-danger" onclick="confirmDeleteGame(${gameId})">削除</button>
     </div>`;
@@ -528,27 +674,205 @@ function renderGameDetail(gameId) {
 
 function confirmDeleteGame(id) {
   showModal('試合を削除', 'この試合の記録とシュートデータが全て削除されます。よろしいですか？', () => {
-    DB.deleteGame(id);
-    toast('試合を削除しました');
-    showPage('games');
+    DB.deleteGame(id); toast('試合を削除しました'); showPage('games');
   });
 }
 
-// ========== Shooting ==========
+// ========== Game Live (Score Sheet) ==========
+function renderGameLive(gameId) {
+  const g = DB.getGame(gameId);
+  if (!g) return '<div class="empty">試合が見つかりません。</div>';
+  const players = DB.getPlayers();
+  const shots = DB.getShots(gameId);
+
+  // Build score sheet: per-player, per-quarter stats from shots
+  const quarters = [1,2,3,4];
+  const playerStats = {};
+  for (const p of players) {
+    playerStats[p.id] = { name: p.name, number: p.number };
+    for (const q of quarters) {
+      const qs = shots.filter(s => s.player_id === p.id && s.quarter === q);
+      const fg = qs.filter(s => s.shot_type !== 'ft');
+      const t3 = qs.filter(s => s.shot_type === '3pt');
+      const ft = qs.filter(s => s.shot_type === 'ft');
+      const pts = fg.filter(s=>s.made&&s.shot_type==='2pt').length*2 + t3.filter(s=>s.made).length*3 + ft.filter(s=>s.made).length;
+      playerStats[p.id]['q'+q] = { pts, fg: fg.filter(s=>s.made).length+'/'+fg.length, t3: t3.filter(s=>s.made).length+'/'+t3.length, ft: ft.filter(s=>s.made).length+'/'+ft.length };
+    }
+    const allPs = shots.filter(s => s.player_id === p.id);
+    const totalFg = allPs.filter(s=>s.shot_type!=='ft');
+    const totalT3 = allPs.filter(s=>s.shot_type==='3pt');
+    const totalFt = allPs.filter(s=>s.shot_type==='ft');
+    const totalPts = totalFg.filter(s=>s.made&&s.shot_type==='2pt').length*2 + totalT3.filter(s=>s.made).length*3 + totalFt.filter(s=>s.made).length;
+    playerStats[p.id].total = { pts: totalPts, fg: totalFg.filter(s=>s.made).length+'/'+totalFg.length, t3: totalT3.filter(s=>s.made).length+'/'+totalT3.length, ft: totalFt.filter(s=>s.made).length+'/'+totalFt.length };
+  }
+
+  let sheetRows = players.map(p => {
+    const ps = playerStats[p.id];
+    return `<tr>
+      <td class="player-col">#${ps.number} ${esc(ps.name)}</td>
+      ${quarters.map(q => `<td>${ps['q'+q].pts}</td>`).join('')}
+      <td class="total-col">${ps.total.pts}</td>
+      <td>${ps.total.fg}</td><td>${ps.total.t3}</td><td>${ps.total.ft}</td>
+    </tr>`;
+  }).join('');
+
+  // Team totals row
+  const teamTotals = quarters.map(q => players.reduce((a,p) => a + playerStats[p.id]['q'+q].pts, 0));
+  const grandTotal = teamTotals.reduce((a,b)=>a+b,0);
+
+  sheetRows += `<tr style="font-weight:700;background:#f5f5f5">
+    <td class="player-col">チーム合計</td>
+    ${teamTotals.map(t => `<td>${t}</td>`).join('')}
+    <td class="total-col">${grandTotal}</td><td></td><td></td><td></td></tr>`;
+
+  // Player select for recording
+  const playerOpts = players.map(p => `<option value="${p.id}">#${p.number} ${esc(p.name)}</option>`).join('');
+
+  return `<span class="back-link" onclick="showPage('game-detail',${gameId})">← 試合詳細に戻る</span>
+    <h1>${g.date} vs ${esc(g.opponent)} - ライブ記録</h1>
+    <div class="card">
+      <h2>スコアシート</h2>
+      <div class="table-wrap">
+        <table class="scoresheet"><thead><tr><th class="player-col">選手</th><th>Q1</th><th>Q2</th><th>Q3</th><th>Q4</th><th class="total-col">計</th><th>FG</th><th>3P</th><th>FT</th></tr></thead>
+        <tbody>${sheetRows}</tbody></table>
+      </div>
+    </div>
+    ${players.length ? `<div class="card">
+      <h2>シュート記録</h2>
+      <div class="form-row" style="margin-bottom:.65rem">
+        <div class="form-group"><label>選手</label><select id="live-player">${playerOpts}</select></div>
+        <div class="form-group"><label>クォーター</label><select id="live-quarter">
+          <option value="1">Q1</option><option value="2">Q2</option><option value="3">Q3</option><option value="4">Q4</option>
+        </select></div>
+      </div>
+      <div class="shot-type-tabs">
+        ${['2pt','3pt','ft'].map((t,i) => `<button class="shot-type-tab${i===0?' active':''}" onclick="setLiveShotType('${t}',this)">${t.toUpperCase()}</button>`).join('')}
+      </div>
+      <div id="live-zone-area">${renderCourtSVG('live')}</div>
+      <div class="shot-buttons" style="margin-top:.65rem">
+        <button class="shot-btn made" onclick="recordLiveShot(${gameId},1)">成功</button>
+        <button class="shot-btn missed" onclick="recordLiveShot(${gameId},0)">失敗</button>
+      </div>
+      <div id="live-undo" style="margin-top:.5rem;text-align:right"></div>
+    </div>` : '<div class="card empty">選手を先に登録してください。<br><button class="btn btn-primary btn-sm" onclick="showPage(\'players\')" style="margin-top:.5rem">選手管理へ</button></div>'}
+    <div id="live-log-area"></div>`;
+}
+
+let liveShotType = '2pt';
+let liveZone = null;
+let liveLog = [];
+
+function setLiveShotType(type, btn) {
+  liveShotType = type;
+  document.querySelectorAll('.shot-type-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  // Hide court for FT
+  const zoneArea = document.getElementById('live-zone-area');
+  if (zoneArea) zoneArea.style.display = type === 'ft' ? 'none' : '';
+}
+
+function selectZone(zoneId, prefix) {
+  document.querySelectorAll('.court-zone').forEach(z => z.classList.remove('selected'));
+  if (liveZone === zoneId) { liveZone = null; return; }
+  liveZone = zoneId;
+  const el = document.getElementById(prefix + '-' + zoneId);
+  if (el) el.classList.add('selected');
+}
+
+function recordLiveShot(gameId, made) {
+  const playerId = Number(document.getElementById('live-player').value);
+  const quarter = Number(document.getElementById('live-quarter').value);
+  const zone = liveShotType === 'ft' ? null : liveZone;
+  const id = DB.addShot({ game_id: gameId, shot_type: liveShotType, made, zone, player_id: playerId, quarter });
+  const player = DB.getPlayer(playerId);
+  liveLog.unshift({ id, type: liveShotType, made, zone, player: player?.name, quarter, time: new Date().toLocaleTimeString() });
+  toast(made ? '成功！' : '失敗', made ? 'success' : '');
+  // Refresh the page to update score sheet
+  showPage('game-live', gameId);
+}
+
+function undoLiveShot(gameId) {
+  if (!liveLog.length) return;
+  DB.deleteShot(liveLog[0].id);
+  liveLog.shift();
+  toast('取り消しました');
+  showPage('game-live', gameId);
+}
+
+// ========== Court SVG ==========
+function renderCourtSVG(prefix) {
+  return `<div class="court-container">
+    <svg viewBox="0 0 300 280" class="court-svg">
+      <!-- Court outline -->
+      <rect x="10" y="10" width="280" height="260" fill="none" stroke="#666" stroke-width="2" rx="3"/>
+      <!-- Basket -->
+      <circle cx="150" cy="35" r="5" fill="none" stroke="#333" stroke-width="2"/>
+      <line x1="140" y1="28" x2="160" y2="28" stroke="#333" stroke-width="2"/>
+
+      <!-- Zones (clickable) -->
+      <!-- Paint -->
+      <rect id="${prefix}-paint" class="court-zone" x="100" y="28" width="100" height="80" rx="2" onclick="selectZone('paint','${prefix}')"/>
+      <text class="court-zone-label" x="150" y="72">ペイント</text>
+
+      <!-- Mid left -->
+      <polygon id="${prefix}-mid_left" class="court-zone" points="10,28 100,28 100,148 10,148" onclick="selectZone('mid_left','${prefix}')"/>
+      <text class="court-zone-label" x="55" y="92">ミドル左</text>
+
+      <!-- Mid right -->
+      <polygon id="${prefix}-mid_right" class="court-zone" points="200,28 290,28 290,148 200,148" onclick="selectZone('mid_right','${prefix}')"/>
+      <text class="court-zone-label" x="245" y="92">ミドル右</text>
+
+      <!-- Mid top -->
+      <polygon id="${prefix}-mid_top" class="court-zone" points="100,108 200,108 200,148 100,148" onclick="selectZone('mid_top','${prefix}')"/>
+      <text class="court-zone-label" x="150" y="133">ミドル正面</text>
+
+      <!-- Three left -->
+      <polygon id="${prefix}-three_left" class="court-zone" points="10,148 100,148 100,230 10,230" onclick="selectZone('three_left','${prefix}')"/>
+      <text class="court-zone-label" x="55" y="193">3PT左</text>
+
+      <!-- Three right -->
+      <polygon id="${prefix}-three_right" class="court-zone" points="200,148 290,148 290,230 200,230" onclick="selectZone('three_right','${prefix}')"/>
+      <text class="court-zone-label" x="245" y="193">3PT右</text>
+
+      <!-- Three top -->
+      <polygon id="${prefix}-three_top" class="court-zone" points="100,148 200,148 200,230 100,230" onclick="selectZone('three_top','${prefix}')"/>
+      <text class="court-zone-label" x="150" y="193">3PTトップ</text>
+
+      <!-- 3pt arc (decorative) -->
+      <path d="M 40,28 L 40,160 Q 150,270 260,160 L 260,28" fill="none" stroke="#999" stroke-width="1" stroke-dasharray="4,3"/>
+      <!-- Free throw line -->
+      <line x1="100" y1="108" x2="200" y2="108" stroke="#999" stroke-width="1"/>
+      <!-- Free throw circle -->
+      <circle cx="150" cy="108" r="30" fill="none" stroke="#999" stroke-width="1" stroke-dasharray="4,3"/>
+    </svg>
+  </div>`;
+}
+
+// ========== Shooting Page ==========
 function renderShooting() {
   const games = DB.getGames();
+  const players = DB.getPlayers();
   const opts = games.map(g => `<option value="${g.id}"${shootingState.gameId == g.id ? ' selected' : ''}>${g.date} vs ${esc(g.opponent)}</option>`).join('');
+  const playerOpts = players.map(p => `<option value="${p.id}"${shootingState.playerId == p.id ? ' selected' : ''}>#${p.number} ${esc(p.name)}</option>`).join('');
 
   return `<h1>シュート記録</h1>
     <div class="card">
-      <div class="form-group"><label>試合（省略可）</label>
-        <select id="shot-game" onchange="shootingState.gameId=this.value||null">
-          <option value="">練習（試合なし）</option>${opts}
-        </select>
+      <div class="form-row">
+        <div class="form-group"><label>試合（省略可）</label>
+          <select id="shot-game" onchange="shootingState.gameId=this.value||null">
+            <option value="">練習（試合なし）</option>${opts}
+          </select>
+        </div>
+        ${players.length ? `<div class="form-group"><label>選手（省略可）</label>
+          <select id="shot-player" onchange="shootingState.playerId=this.value||null">
+            <option value="">指定なし</option>${playerOpts}
+          </select>
+        </div>` : ''}
       </div>
       <div class="shot-type-tabs">
         ${['2pt','3pt','ft'].map(t => `<button class="shot-type-tab${shootingState.type===t?' active':''}" onclick="setShotType('${t}',this)">${t.toUpperCase()}</button>`).join('')}
       </div>
+      <div id="zone-area">${renderCourtSVG('shoot')}</div>
       <div class="shot-buttons">
         <button class="shot-btn made" id="btn-made" onclick="recordShot(1)">成功</button>
         <button class="shot-btn missed" id="btn-missed" onclick="recordShot(0)">失敗</button>
@@ -556,25 +880,38 @@ function renderShooting() {
       <div id="undo-area"></div>
     </div>
     <div class="card-grid" id="shot-stats"></div>
+    <div id="zone-stats-area"></div>
     <div id="shot-log-area"></div>`;
 }
 
-function restoreShootingState() { updateShootingUI(); }
+function restoreShootingState() { updateShootingUI(); updateZoneDisplay(); }
 
 function setShotType(type, btn) {
   shootingState.type = type;
   document.querySelectorAll('.shot-type-tab').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
+  updateZoneDisplay();
+}
+
+function updateZoneDisplay() {
+  const za = document.getElementById('zone-area');
+  if (za) za.style.display = shootingState.type === 'ft' ? 'none' : '';
 }
 
 function recordShot(made) {
-  const id = DB.addShot({ game_id: shootingState.gameId ? Number(shootingState.gameId) : null, shot_type: shootingState.type, made });
-  shootingState.log.unshift({ id, shot_type: shootingState.type, made, time: new Date().toLocaleTimeString() });
+  const zone = shootingState.type === 'ft' ? null : (liveZone || null);
+  const playerId = shootingState.playerId ? Number(shootingState.playerId) : null;
+  const id = DB.addShot({ game_id: shootingState.gameId ? Number(shootingState.gameId) : null, shot_type: shootingState.type, made, zone, player_id: playerId, quarter: null });
+  const player = playerId ? DB.getPlayer(playerId) : null;
+  shootingState.log.unshift({ id, shot_type: shootingState.type, made, zone, player: player?.name, time: new Date().toLocaleTimeString() });
 
-  // Flash animation
   const btnId = made ? 'btn-made' : 'btn-missed';
   const btn = document.getElementById(btnId);
   if (btn) { btn.classList.remove('flash'); void btn.offsetWidth; btn.classList.add('flash'); }
+
+  // Reset zone selection
+  document.querySelectorAll('.court-zone').forEach(z => z.classList.remove('selected'));
+  liveZone = null;
 
   updateShootingUI();
 }
@@ -605,12 +942,34 @@ function updateShootingUI() {
      <div class="card"><div class="stat-label">3PT</div><div class="stat-value stat-sm">${s3.made}/${s3.total}</div><div class="stat-label">${s3.pct}</div></div>
      <div class="card"><div class="stat-label">FT</div><div class="stat-value stat-sm">${sft.made}/${sft.total}</div><div class="stat-label">${sft.pct}</div></div>`;
 
+  // Zone stats for current session
+  const zoneShots = log.filter(x => x.zone && x.shot_type !== 'ft');
+  if (zoneShots.length) {
+    const byZone = {};
+    for (const s of zoneShots) {
+      if (!byZone[s.zone]) byZone[s.zone] = { total: 0, made: 0 };
+      byZone[s.zone].total++;
+      if (s.made) byZone[s.zone].made++;
+    }
+    const items = Object.entries(byZone).map(([k,v]) => {
+      const p = +(v.made/v.total*100).toFixed(1);
+      return `<div class="zone-stat-item"><div class="zone-stat-label">${ZONES[k]||k}</div><div class="zone-stat-pct ${pctColor(p)}">${p}%</div><div class="zone-stat-detail">${v.made}/${v.total}</div></div>`;
+    }).join('');
+    document.getElementById('zone-stats-area').innerHTML = `<div class="card"><h2>ゾーン別（今回）</h2><div class="zone-stats-grid">${items}</div></div>`;
+  } else {
+    document.getElementById('zone-stats-area').innerHTML = '';
+  }
+
   document.getElementById('undo-area').innerHTML = log.length
     ? `<div style="margin-top:.65rem;text-align:right"><button class="btn btn-outline btn-sm" onclick="undoLastShot()">元に戻す</button></div>` : '';
 
   document.getElementById('shot-log-area').innerHTML = log.length
     ? `<div class="card"><h2>記録ログ（${log.length}本）</h2><div class="shot-log">${
-      log.map(s => `<div class="shot-log-item"><span>${s.shot_type.toUpperCase()}</span><span class="${s.made?'win':'lose'}">${s.made?'成功':'失敗'}</span><span style="color:var(--text-sec);font-size:.78rem">${s.time}</span></div>`).join('')
+      log.map(s => `<div class="shot-log-item">
+        <span>${s.shot_type.toUpperCase()}${s.zone?' / '+ZONES[s.zone]:''}</span>
+        ${s.player?'<span style="color:var(--text-sec)">'+esc(s.player)+'</span>':''}
+        <span class="${s.made?'win':'lose'}">${s.made?'成功':'失敗'}</span>
+        <span style="color:var(--text-sec);font-size:.78rem">${s.time}</span></div>`).join('')
     }</div></div>` : '';
 }
 
@@ -618,6 +977,8 @@ function updateShootingUI() {
 function renderStats() {
   const avg = DB.getAverages();
   const shooting = DB.getShootingStats();
+  const zoneStats = DB.getZoneStats();
+  const hasZones = Object.values(zoneStats).some(z => z.total > 0);
 
   const avgCards = avg.games_played ? [['得点',avg.avg_points],['REB',avg.avg_rebounds],['AST',avg.avg_assists],['STL',avg.avg_steals],['BLK',avg.avg_blocks],['TO',avg.avg_turnovers]]
     .map(([l,v]) => `<div><div class="stat-label">${l}</div><div class="stat-value stat-sm">${v??'-'}</div></div>`).join('') : '';
@@ -625,12 +986,24 @@ function renderStats() {
   const shootCards = shooting.by_type.map(s =>
     `<div><div class="stat-label">${s.shot_type.toUpperCase()}</div><div class="stat-value stat-sm">${s.percentage}%</div><div class="stat-label">${s.made}/${s.total}</div></div>`).join('');
 
+  // Zone stats
+  let zoneHTML = '';
+  if (hasZones) {
+    const items = Object.entries(zoneStats).filter(([,v]) => v.total > 0).map(([k,v]) => {
+      const p = +(v.made/v.total*100).toFixed(1);
+      return `<div class="zone-stat-item"><div class="zone-stat-label">${ZONES[k]}</div><div class="zone-stat-pct ${pctColor(p)}">${p}%</div><div class="zone-stat-detail">${v.made}/${v.total}</div></div>`;
+    }).join('');
+    zoneHTML = `<div class="card"><h2>ゾーン別シュート成功率（通算）</h2><div class="zone-stats-grid">${items}</div>
+      <div class="chart-box" style="height:200px;margin-top:.75rem"><canvas id="zoneBar"></canvas></div></div>`;
+  }
+
   return `<h1>統計</h1>
     ${avg.games_played ? `<div class="card"><h2>シーズン平均（${avg.games_played}試合）</h2><div class="card-grid">${avgCards}</div></div>` : ''}
     ${shooting.by_type.length ? `<div class="card"><h2>シュート成功率</h2><div class="card-grid">
       <div><div class="stat-label">FG%</div><div class="stat-value">${shooting.field_goal?.percentage??'-'}%</div><div class="stat-label">${shooting.field_goal?.made??0}/${shooting.field_goal?.total??0}</div></div>
       ${shootCards}</div>
       <div class="chart-box" style="height:180px"><canvas id="shootingBar"></canvas></div></div>` : ''}
+    ${zoneHTML}
     <div class="card" id="stats-trend-card"><h2>スタッツ推移</h2><div class="chart-box"><canvas id="statsTrend"></canvas></div></div>
     <div class="card" id="shooting-trend-card"><h2>シュート成功率推移</h2><div class="chart-box"><canvas id="shootingTrend"></canvas></div></div>
     ${!avg.games_played && !shooting.by_type.length ? '<div class="empty">データがありません。試合やシュートを記録しましょう！</div>' : ''}
@@ -648,12 +1021,28 @@ function renderStats() {
 function initStatsCharts() {
   const shooting = DB.getShootingStats();
   const trends = DB.getTrends();
+  const zoneStats = DB.getZoneStats();
 
   if (shooting.by_type.length) {
     const ctx = document.getElementById('shootingBar');
     if (ctx) charts.push(new Chart(ctx, { type:'bar', data:{ labels:shooting.by_type.map(s=>s.shot_type.toUpperCase()),
       datasets:[{label:'成功',data:shooting.by_type.map(s=>s.made),backgroundColor:'#2e7d32'},{label:'失敗',data:shooting.by_type.map(s=>s.total-s.made),backgroundColor:'#c62828'}]},
       options:{responsive:true,maintainAspectRatio:false,scales:{x:{stacked:true},y:{stacked:true}}} }));
+  }
+
+  // Zone chart
+  const hasZones = Object.values(zoneStats).some(z => z.total > 0);
+  if (hasZones) {
+    const ctx = document.getElementById('zoneBar');
+    if (ctx) {
+      const entries = Object.entries(zoneStats).filter(([,v]) => v.total > 0);
+      charts.push(new Chart(ctx, { type:'bar', data:{
+        labels: entries.map(([k]) => ZONES[k]),
+        datasets:[
+          {label:'成功',data:entries.map(([,v])=>v.made),backgroundColor:'#2e7d32'},
+          {label:'失敗',data:entries.map(([,v])=>v.total-v.made),backgroundColor:'#c62828'}
+        ]}, options:{responsive:true,maintainAspectRatio:false,scales:{x:{stacked:true},y:{stacked:true}}} }));
+    }
   }
 
   const gt = trends.game_trends;
@@ -689,23 +1078,19 @@ function importData(e) {
   if (!file) return;
   const reader = new FileReader();
   reader.onload = () => {
-    try {
-      DB.importAll(reader.result);
-      toast('データを読み込みました', 'success');
-      showPage(currentPage);
-    } catch {
-      toast('ファイル形式が正しくありません', 'error');
-    }
+    try { DB.importAll(reader.result); toast('データを読み込みました', 'success'); showPage(currentPage); }
+    catch { toast('ファイル形式が正しくありません', 'error'); }
   };
   reader.readAsText(file);
   e.target.value = '';
 }
 
 function confirmClearData() {
-  showModal('全データ削除', '全ての試合・シュートデータが削除されます。この操作は取り消せません。', () => {
+  showModal('全データ削除', '全ての試合・シュート・選手データが削除されます。この操作は取り消せません。', () => {
     localStorage.removeItem('bball_games');
     localStorage.removeItem('bball_shots');
-    shootingState = { type: '2pt', log: [], gameId: null };
+    localStorage.removeItem('bball_players');
+    shootingState = { type: '2pt', zone: null, log: [], gameId: null, playerId: null, quarter: null };
     toast('全データを削除しました');
     showPage('dashboard');
   });
@@ -713,11 +1098,7 @@ function confirmClearData() {
 
 // ========== Init ==========
 showPage('dashboard');
-
-// Register Service Worker for PWA
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('sw.js').catch(() => {});
-}
+if ('serviceWorker' in navigator) { navigator.serviceWorker.register('sw.js').catch(() => {}); }
 </script>
 </body>
 </html>
