@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Basketball Stats Tracker</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+<style>
+:root {
+  --primary: #e65100;
+  --primary-light: #ff833a;
+  --bg: #fafafa;
+  --surface: #ffffff;
+  --text: #212121;
+  --text-sec: #757575;
+  --border: #e0e0e0;
+  --success: #2e7d32;
+  --danger: #c62828;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.5; }
+nav { background: var(--primary); color: #fff; padding: 0 1rem; display: flex; align-items: center; gap: .5rem; height: 56px; box-shadow: 0 2px 4px rgba(0,0,0,.15); flex-wrap: wrap; }
+nav .logo { font-weight: 700; font-size: 1.1rem; margin-right: .5rem; }
+nav button { background: rgba(255,255,255,.15); color: #fff; border: none; padding: .4rem .75rem; border-radius: 6px; cursor: pointer; font-size: .9rem; }
+nav button:hover, nav button.active { background: rgba(255,255,255,.3); }
+main { max-width: 960px; margin: 0 auto; padding: 1.5rem; }
+h1 { font-size: 1.5rem; margin-bottom: 1rem; }
+h2 { font-size: 1.15rem; margin-bottom: .75rem; }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 1.25rem; margin-bottom: 1rem; box-shadow: 0 1px 3px rgba(0,0,0,.06); }
+.card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: .75rem; margin-bottom: 1rem; }
+.stat-value { font-size: 2rem; font-weight: 700; color: var(--primary); }
+.stat-sm { font-size: 1.4rem; }
+.stat-label { font-size: .85rem; color: var(--text-sec); }
+.btn { display: inline-flex; align-items: center; gap: .3rem; padding: .5rem 1rem; border: none; border-radius: 6px; font-size: .9rem; cursor: pointer; text-decoration: none; }
+.btn:hover { opacity: .85; }
+.btn-primary { background: var(--primary); color: #fff; }
+.btn-success { background: var(--success); color: #fff; }
+.btn-danger { background: var(--danger); color: #fff; }
+.btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text); }
+.form-group { margin-bottom: .75rem; }
+.form-group label { display: block; font-size: .85rem; font-weight: 600; margin-bottom: .2rem; color: var(--text-sec); }
+.form-group input, .form-group textarea, .form-group select { width: 100%; padding: .5rem .75rem; border: 1px solid var(--border); border-radius: 6px; font-size: .95rem; font-family: inherit; }
+.form-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: .75rem; }
+table { width: 100%; border-collapse: collapse; }
+th, td { padding: .5rem .6rem; text-align: left; border-bottom: 1px solid var(--border); font-size: .9rem; }
+th { font-size: .75rem; color: var(--text-sec); text-transform: uppercase; letter-spacing: .5px; }
+.win { color: var(--success); font-weight: 600; }
+.lose { color: var(--danger); font-weight: 600; }
+.clickable { cursor: pointer; }
+.clickable:hover { background: #f5f5f5; }
+.shot-type-tabs { display: flex; gap: .5rem; margin-bottom: 1rem; }
+.shot-type-tab { flex: 1; padding: .75rem; border: 2px solid var(--border); border-radius: 8px; background: var(--surface); font-size: 1rem; font-weight: 600; cursor: pointer; text-align: center; }
+.shot-type-tab.active { border-color: var(--primary); background: var(--primary); color: #fff; }
+.shot-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: .75rem; }
+.shot-btn { padding: 1.5rem; border: 2px solid var(--border); border-radius: 12px; font-size: 1.2rem; font-weight: 700; cursor: pointer; background: var(--surface); }
+.shot-btn.made { border-color: var(--success); color: var(--success); }
+.shot-btn.made:hover { background: var(--success); color: #fff; }
+.shot-btn.missed { border-color: var(--danger); color: var(--danger); }
+.shot-btn.missed:hover { background: var(--danger); color: #fff; }
+.shot-log { margin-top: 1rem; max-height: 250px; overflow-y: auto; }
+.shot-log-item { display: flex; justify-content: space-between; padding: .35rem 0; border-bottom: 1px solid var(--border); font-size: .85rem; }
+.empty { text-align: center; padding: 2.5rem 1rem; color: var(--text-sec); }
+.actions { display: flex; gap: .5rem; margin-top: 1rem; }
+.flex-between { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+.chart-box { position: relative; height: 280px; margin-bottom: 1rem; }
+.hidden { display: none; }
+.back-link { color: var(--primary); cursor: pointer; font-size: .9rem; margin-bottom: .75rem; display: inline-block; }
+.modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,.4); display: flex; align-items: center; justify-content: center; z-index: 100; }
+.modal { background: #fff; border-radius: 12px; padding: 1.5rem; max-width: 500px; width: 90%; max-height: 90vh; overflow-y: auto; }
+@media (max-width: 600px) {
+  nav { gap: .25rem; } nav button { font-size: .8rem; padding: .3rem .5rem; }
+  main { padding: 1rem; } .form-row { grid-template-columns: 1fr 1fr; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <span class="logo">Basketball Stats</span>
+  <button onclick="showPage('dashboard')" id="nav-dashboard">Dashboard</button>
+  <button onclick="showPage('games')" id="nav-games">Games</button>
+  <button onclick="showPage('shooting')" id="nav-shooting">Shooting</button>
+  <button onclick="showPage('stats')" id="nav-stats">Stats</button>
+</nav>
+<main id="app"></main>
+
+<script>
+// --- Data Layer (localStorage) ---
+const DB = {
+  _get(key) { return JSON.parse(localStorage.getItem('bball_' + key) || '[]'); },
+  _set(key, val) { localStorage.setItem('bball_' + key, JSON.stringify(val)); },
+  _nextId(key) {
+    const items = this._get(key);
+    return items.length ? Math.max(...items.map(i => i.id)) + 1 : 1;
+  },
+
+  getGames() { return this._get('games').sort((a, b) => b.date.localeCompare(a.date)); },
+  getGame(id) { return this._get('games').find(g => g.id === id); },
+  saveGame(game) {
+    const games = this._get('games');
+    if (game.id) {
+      const idx = games.findIndex(g => g.id === game.id);
+      if (idx >= 0) games[idx] = game;
+    } else {
+      game.id = this._nextId('games');
+      games.push(game);
+    }
+    this._set('games', games);
+    return game.id;
+  },
+  deleteGame(id) {
+    this._set('games', this._get('games').filter(g => g.id !== id));
+    this._set('shots', this._get('shots').filter(s => s.game_id !== id));
+  },
+
+  getShots(gameId) {
+    const shots = this._get('shots');
+    return gameId != null ? shots.filter(s => s.game_id === gameId) : shots;
+  },
+  addShot(shot) {
+    const shots = this._get('shots');
+    shot.id = this._nextId('shots');
+    shot.created_at = new Date().toISOString();
+    shots.push(shot);
+    this._set('shots', shots);
+    return shot.id;
+  },
+  deleteShot(id) {
+    this._set('shots', this._get('shots').filter(s => s.id !== id));
+  },
+
+  getShootingStats() {
+    const shots = this._get('shots');
+    const byType = {};
+    for (const s of shots) {
+      if (!byType[s.shot_type]) byType[s.shot_type] = { total: 0, made: 0 };
+      byType[s.shot_type].total++;
+      if (s.made) byType[s.shot_type].made++;
+    }
+    const result = [];
+    for (const [type, d] of Object.entries(byType)) {
+      result.push({ shot_type: type, total: d.total, made: d.made, percentage: d.total ? +(d.made / d.total * 100).toFixed(1) : 0 });
+    }
+    const fgShots = shots.filter(s => s.shot_type !== 'ft');
+    const fgMade = fgShots.filter(s => s.made).length;
+    const fg = { total: fgShots.length, made: fgMade, percentage: fgShots.length ? +(fgMade / fgShots.length * 100).toFixed(1) : null };
+    return { by_type: result, field_goal: fg };
+  },
+
+  getAverages() {
+    const games = this._get('games');
+    if (!games.length) return { games_played: 0 };
+    const n = games.length;
+    const sum = (key) => games.reduce((a, g) => a + (g.stats?.[key] || 0), 0);
+    const avg = (key) => +(sum(key) / n).toFixed(1);
+    return {
+      games_played: n,
+      avg_points: avg('points'), avg_rebounds: avg('rebounds'), avg_assists: avg('assists'),
+      avg_steals: avg('steals'), avg_blocks: avg('blocks'), avg_turnovers: avg('turnovers'),
+    };
+  },
+
+  getTrends() {
+    const games = this._get('games').sort((a, b) => a.date.localeCompare(b.date));
+    const shots = this._get('shots');
+    const gameTrends = games.filter(g => g.stats).map(g => ({
+      date: g.date, opponent: g.opponent, ...g.stats
+    }));
+    const shootingTrends = games.map(g => {
+      const gs = shots.filter(s => s.game_id === g.id);
+      if (!gs.length) return null;
+      const fgS = gs.filter(s => s.shot_type !== 'ft');
+      const t3 = gs.filter(s => s.shot_type === '3pt');
+      return {
+        date: g.date, opponent: g.opponent,
+        fg_pct: fgS.length ? +(fgS.filter(s => s.made).length / fgS.length * 100).toFixed(1) : null,
+        three_pct: t3.length ? +(t3.filter(s => s.made).length / t3.length * 100).toFixed(1) : null,
+      };
+    }).filter(Boolean);
+    return { game_trends: gameTrends, shooting_trends: shootingTrends };
+  }
+};
+
+// --- Rendering ---
+let currentPage = 'dashboard';
+let charts = [];
+
+function destroyCharts() { charts.forEach(c => c.destroy()); charts = []; }
+
+function showPage(page, data) {
+  destroyCharts();
+  currentPage = page;
+  document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+  const navBtn = document.getElementById('nav-' + page.split('-')[0]);
+  if (navBtn) navBtn.classList.add('active');
+
+  const app = document.getElementById('app');
+  switch (page) {
+    case 'dashboard': app.innerHTML = renderDashboard(); initDashboardCharts(); break;
+    case 'games': app.innerHTML = renderGameList(); break;
+    case 'game-new': app.innerHTML = renderGameForm(); break;
+    case 'game-edit': app.innerHTML = renderGameForm(data); break;
+    case 'game-detail': app.innerHTML = renderGameDetail(data); break;
+    case 'shooting': app.innerHTML = renderShooting(); initShootingState(); break;
+    case 'stats': app.innerHTML = renderStats(); initStatsCharts(); break;
+  }
+}
+
+// --- Dashboard ---
+function renderDashboard() {
+  const avg = DB.getAverages();
+  const shooting = DB.getShootingStats();
+  const games = DB.getGames().slice(0, 5);
+  const fgPct = shooting.field_goal?.percentage ?? '-';
+  const threePct = shooting.by_type.find(s => s.shot_type === '3pt')?.percentage ?? '-';
+
+  let gameRows = '';
+  if (games.length) {
+    gameRows = games.map(g => {
+      const res = g.my_score > g.opponent_score ? 'W' : g.my_score < g.opponent_score ? 'L' : '-';
+      const cls = res === 'W' ? 'win' : res === 'L' ? 'lose' : '';
+      return `<tr class="clickable" onclick="showPage('game-detail',${g.id})">
+        <td>${g.date}</td><td>${esc(g.opponent)}</td><td>${g.my_score}-${g.opponent_score}</td>
+        <td>${g.stats?.points ?? '-'}</td><td class="${cls}">${res}</td></tr>`;
+    }).join('');
+  }
+
+  return `<h1>Dashboard</h1>
+    <div class="card-grid">
+      <div class="card"><div class="stat-label">Games Played</div><div class="stat-value">${avg.games_played}</div></div>
+      <div class="card"><div class="stat-label">Avg Points</div><div class="stat-value">${avg.avg_points ?? '-'}</div></div>
+      <div class="card"><div class="stat-label">FG%</div><div class="stat-value">${fgPct}${fgPct !== '-' ? '%' : ''}</div></div>
+      <div class="card"><div class="stat-label">3P%</div><div class="stat-value">${threePct}${threePct !== '-' ? '%' : ''}</div></div>
+    </div>
+    <div class="card" id="trend-card"><h2>Points Trend</h2><div class="chart-box"><canvas id="trendChart"></canvas></div></div>
+    <div class="card">
+      <div class="flex-between"><h2 style="margin:0">Recent Games</h2><button class="btn btn-primary" onclick="showPage('game-new')">+ New Game</button></div>
+      ${games.length ? `<table><thead><tr><th>Date</th><th>Opponent</th><th>Score</th><th>PTS</th><th>Result</th></tr></thead><tbody>${gameRows}</tbody></table>`
+      : '<div class="empty"><p>No games recorded yet.</p><button class="btn btn-primary" onclick="showPage(\'game-new\')" style="margin-top:1rem">Record your first game</button></div>'}
+    </div>`;
+}
+
+function initDashboardCharts() {
+  const trends = DB.getTrends();
+  const gt = trends.game_trends;
+  if (gt.length < 2) { document.getElementById('trend-card')?.classList.add('hidden'); return; }
+  const ctx = document.getElementById('trendChart');
+  if (!ctx) return;
+  charts.push(new Chart(ctx, {
+    type: 'line',
+    data: { labels: gt.map(g => g.date), datasets: [{ label: 'Points', data: gt.map(g => g.points), borderColor: '#e65100', tension: .3 }] },
+    options: { responsive: true, maintainAspectRatio: false }
+  }));
+}
+
+// --- Game List ---
+function renderGameList() {
+  const games = DB.getGames();
+  let rows = games.map(g => {
+    const res = g.my_score > g.opponent_score ? 'W' : g.my_score < g.opponent_score ? 'L' : '-';
+    const cls = res === 'W' ? 'win' : res === 'L' ? 'lose' : '';
+    return `<tr class="clickable" onclick="showPage('game-detail',${g.id})">
+      <td>${g.date}</td><td>${esc(g.opponent)}</td><td>${g.my_score}-${g.opponent_score}</td>
+      <td>${g.stats?.points ?? '-'}</td><td>${g.stats?.rebounds ?? '-'}</td><td>${g.stats?.assists ?? '-'}</td>
+      <td class="${cls}">${res}</td></tr>`;
+  }).join('');
+
+  return `<div class="flex-between"><h1 style="margin:0">Games</h1><button class="btn btn-primary" onclick="showPage('game-new')">+ New Game</button></div>
+    ${games.length ? `<div class="card"><table><thead><tr><th>Date</th><th>Opponent</th><th>Score</th><th>PTS</th><th>REB</th><th>AST</th><th>Result</th></tr></thead><tbody>${rows}</tbody></table></div>`
+    : '<div class="empty">No games recorded yet.</div>'}`;
+}
+
+// --- Game Form ---
+function renderGameForm(gameId) {
+  const g = gameId ? DB.getGame(gameId) : null;
+  const isEdit = !!g;
+  const today = new Date().toISOString().split('T')[0];
+  const s = g?.stats || {};
+
+  return `<span class="back-link" onclick="showPage('${isEdit ? 'game-detail' : 'games'}' ${isEdit ? ',' + gameId : ''})">&#8592; Back</span>
+    <h1>${isEdit ? 'Edit Game' : 'New Game'}</h1>
+    <form class="card" onsubmit="saveGame(event, ${gameId || 'null'})">
+      <div class="form-row">
+        <div class="form-group"><label>Date</label><input type="date" id="f-date" value="${g?.date || today}" required></div>
+        <div class="form-group"><label>Opponent</label><input type="text" id="f-opponent" value="${esc(g?.opponent || '')}" placeholder="Team name"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>My Score</label><input type="number" min="0" id="f-my-score" value="${g?.my_score ?? ''}"></div>
+        <div class="form-group"><label>Opponent Score</label><input type="number" min="0" id="f-opp-score" value="${g?.opponent_score ?? ''}"></div>
+        <div class="form-group"><label>Minutes Played</label><input type="number" min="0" id="f-minutes" value="${g?.minutes_played ?? ''}"></div>
+      </div>
+      <h2>Player Stats</h2>
+      <div class="form-row">
+        <div class="form-group"><label>Points</label><input type="number" min="0" id="f-pts" value="${s.points ?? ''}"></div>
+        <div class="form-group"><label>Rebounds</label><input type="number" min="0" id="f-reb" value="${s.rebounds ?? ''}"></div>
+        <div class="form-group"><label>Assists</label><input type="number" min="0" id="f-ast" value="${s.assists ?? ''}"></div>
+        <div class="form-group"><label>Steals</label><input type="number" min="0" id="f-stl" value="${s.steals ?? ''}"></div>
+        <div class="form-group"><label>Blocks</label><input type="number" min="0" id="f-blk" value="${s.blocks ?? ''}"></div>
+        <div class="form-group"><label>Turnovers</label><input type="number" min="0" id="f-to" value="${s.turnovers ?? ''}"></div>
+        <div class="form-group"><label>Fouls</label><input type="number" min="0" id="f-fls" value="${s.fouls ?? ''}"></div>
+      </div>
+      <div class="form-group"><label>Notes</label><textarea rows="3" id="f-notes" placeholder="Game notes...">${esc(g?.notes || '')}</textarea></div>
+      <div class="actions">
+        <button type="submit" class="btn btn-primary">${isEdit ? 'Update' : 'Save'} Game</button>
+        <button type="button" class="btn btn-outline" onclick="showPage('${isEdit ? 'game-detail' : 'games'}' ${isEdit ? ',' + gameId : ''})">Cancel</button>
+      </div>
+    </form>`;
+}
+
+function saveGame(e, existingId) {
+  e.preventDefault();
+  const v = id => document.getElementById(id).value;
+  const n = id => Number(v(id)) || 0;
+  const game = {
+    id: existingId,
+    date: v('f-date'),
+    opponent: v('f-opponent'),
+    my_score: n('f-my-score'),
+    opponent_score: n('f-opp-score'),
+    minutes_played: n('f-minutes'),
+    notes: v('f-notes'),
+    stats: { points: n('f-pts'), rebounds: n('f-reb'), assists: n('f-ast'), steals: n('f-stl'), blocks: n('f-blk'), turnovers: n('f-to'), fouls: n('f-fls') }
+  };
+  const id = DB.saveGame(game);
+  showPage('game-detail', id);
+}
+
+// --- Game Detail ---
+function renderGameDetail(gameId) {
+  const g = DB.getGame(gameId);
+  if (!g) return '<div class="empty">Game not found.</div>';
+  const res = g.my_score > g.opponent_score ? 'W' : g.my_score < g.opponent_score ? 'L' : '-';
+  const cls = res === 'W' ? 'win' : res === 'L' ? 'lose' : '';
+  const s = g.stats || {};
+  const shots = DB.getShots(gameId);
+
+  const shotSummary = (type) => {
+    const ts = shots.filter(s => s.shot_type === type);
+    if (!ts.length) return '-';
+    const m = ts.filter(s => s.made).length;
+    return `${m}/${ts.length} (${(m / ts.length * 100).toFixed(1)}%)`;
+  };
+
+  const statCards = [['Points', s.points], ['Rebounds', s.rebounds], ['Assists', s.assists],
+    ['Steals', s.steals], ['Blocks', s.blocks], ['Turnovers', s.turnovers], ['Fouls', s.fouls], ['Minutes', g.minutes_played]]
+    .map(([l, v]) => `<div><div class="stat-label">${l}</div><div class="stat-value stat-sm">${v ?? '-'}</div></div>`).join('');
+
+  return `<span class="back-link" onclick="showPage('games')">&#8592; Back to Games</span>
+    <div class="flex-between">
+      <h1>${g.date} vs ${esc(g.opponent)}</h1>
+      <span class="${cls}" style="font-size:1.5rem">${res} ${g.my_score}-${g.opponent_score}</span>
+    </div>
+    <div class="card"><h2>Player Stats</h2><div class="card-grid">${statCards}</div></div>
+    ${shots.length ? `<div class="card"><h2>Shooting</h2><div class="card-grid">
+      <div><div class="stat-label">2PT</div><div style="font-weight:600">${shotSummary('2pt')}</div></div>
+      <div><div class="stat-label">3PT</div><div style="font-weight:600">${shotSummary('3pt')}</div></div>
+      <div><div class="stat-label">FT</div><div style="font-weight:600">${shotSummary('ft')}</div></div>
+    </div></div>` : ''}
+    ${g.notes ? `<div class="card"><h2>Notes</h2><p>${esc(g.notes)}</p></div>` : ''}
+    <div class="actions">
+      <button class="btn btn-primary" onclick="showPage('game-edit',${gameId})">Edit</button>
+      <button class="btn btn-danger" onclick="deleteGame(${gameId})">Delete</button>
+    </div>`;
+}
+
+function deleteGame(id) {
+  if (!confirm('Delete this game?')) return;
+  DB.deleteGame(id);
+  showPage('games');
+}
+
+// --- Shooting ---
+let shootingState = { type: '2pt', log: [], gameId: null };
+
+function renderShooting() {
+  const games = DB.getGames();
+  const opts = games.map(g => `<option value="${g.id}">${g.date} vs ${esc(g.opponent)}</option>`).join('');
+
+  return `<h1>Shooting Record</h1>
+    <div class="card">
+      <div class="form-group"><label>Game (optional)</label>
+        <select id="shot-game" onchange="shootingState.gameId=this.value||null">
+          <option value="">Practice (no game)</option>${opts}
+        </select>
+      </div>
+      <div class="shot-type-tabs">
+        <button class="shot-type-tab active" onclick="setShotType('2pt',this)">2PT</button>
+        <button class="shot-type-tab" onclick="setShotType('3pt',this)">3PT</button>
+        <button class="shot-type-tab" onclick="setShotType('ft',this)">FT</button>
+      </div>
+      <div class="shot-buttons">
+        <button class="shot-btn made" onclick="recordShot(1)">MADE</button>
+        <button class="shot-btn missed" onclick="recordShot(0)">MISSED</button>
+      </div>
+      <div id="undo-area"></div>
+    </div>
+    <div class="card-grid" id="shot-stats"></div>
+    <div id="shot-log-area"></div>`;
+}
+
+function initShootingState() {
+  shootingState = { type: '2pt', log: [], gameId: null };
+  updateShootingUI();
+}
+
+function setShotType(type, btn) {
+  shootingState.type = type;
+  document.querySelectorAll('.shot-type-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function recordShot(made) {
+  const id = DB.addShot({ game_id: shootingState.gameId ? Number(shootingState.gameId) : null, shot_type: shootingState.type, made });
+  shootingState.log.unshift({ id, shot_type: shootingState.type, made, time: new Date().toLocaleTimeString() });
+  updateShootingUI();
+}
+
+function undoLastShot() {
+  if (!shootingState.log.length) return;
+  DB.deleteShot(shootingState.log[0].id);
+  shootingState.log.shift();
+  updateShootingUI();
+}
+
+function updateShootingUI() {
+  const log = shootingState.log;
+  const summary = (type) => {
+    const s = log.filter(x => x.shot_type === type);
+    if (!s.length) return { made: 0, total: 0, pct: '-' };
+    const m = s.filter(x => x.made).length;
+    return { made: m, total: s.length, pct: (m / s.length * 100).toFixed(1) + '%' };
+  };
+  const s2 = summary('2pt'), s3 = summary('3pt'), sft = summary('ft');
+  const allFg = log.filter(x => x.shot_type !== 'ft');
+  const fgPct = allFg.length ? (allFg.filter(x => x.made).length / allFg.length * 100).toFixed(1) + '%' : '-';
+
+  document.getElementById('shot-stats').innerHTML = `
+    <div class="card"><div class="stat-label">FG%</div><div class="stat-value">${fgPct}</div></div>
+    <div class="card"><div class="stat-label">2PT</div><div class="stat-value stat-sm">${s2.made}/${s2.total}</div><div class="stat-label">${s2.pct}</div></div>
+    <div class="card"><div class="stat-label">3PT</div><div class="stat-value stat-sm">${s3.made}/${s3.total}</div><div class="stat-label">${s3.pct}</div></div>
+    <div class="card"><div class="stat-label">FT</div><div class="stat-value stat-sm">${sft.made}/${sft.total}</div><div class="stat-label">${sft.pct}</div></div>`;
+
+  document.getElementById('undo-area').innerHTML = log.length
+    ? `<div style="margin-top:.75rem;text-align:right"><button class="btn btn-outline" onclick="undoLastShot()">Undo Last</button></div>` : '';
+
+  document.getElementById('shot-log-area').innerHTML = log.length
+    ? `<div class="card"><h2>Shot Log (${log.length} shots)</h2><div class="shot-log">${
+        log.map(s => `<div class="shot-log-item"><span>${s.shot_type.toUpperCase()}</span><span class="${s.made ? 'win' : 'lose'}">${s.made ? 'MADE' : 'MISSED'}</span><span style="color:var(--text-sec);font-size:.8rem">${s.time}</span></div>`).join('')
+      }</div></div>` : '';
+}
+
+// --- Stats ---
+function renderStats() {
+  const avg = DB.getAverages();
+  const shooting = DB.getShootingStats();
+
+  const avgCards = avg.games_played ? [['PPG', avg.avg_points], ['RPG', avg.avg_rebounds], ['APG', avg.avg_assists],
+    ['SPG', avg.avg_steals], ['BPG', avg.avg_blocks], ['TOPG', avg.avg_turnovers]]
+    .map(([l, v]) => `<div><div class="stat-label">${l}</div><div class="stat-value stat-sm">${v ?? '-'}</div></div>`).join('') : '';
+
+  const shootCards = shooting.by_type.map(s =>
+    `<div><div class="stat-label">${s.shot_type.toUpperCase()}</div><div class="stat-value stat-sm">${s.percentage}%</div><div class="stat-label">${s.made}/${s.total}</div></div>`
+  ).join('');
+
+  return `<h1>Statistics</h1>
+    ${avg.games_played ? `<div class="card"><h2>Season Averages (${avg.games_played} games)</h2><div class="card-grid">${avgCards}</div></div>` : ''}
+    ${shooting.by_type.length ? `<div class="card"><h2>Shooting Summary</h2>
+      <div class="card-grid">
+        <div><div class="stat-label">FG%</div><div class="stat-value">${shooting.field_goal?.percentage ?? '-'}%</div><div class="stat-label">${shooting.field_goal?.made ?? 0}/${shooting.field_goal?.total ?? 0}</div></div>
+        ${shootCards}
+      </div>
+      <div class="chart-box" style="height:200px"><canvas id="shootingBar"></canvas></div>
+    </div>` : ''}
+    <div class="card" id="stats-trend-card"><h2>Stats Trend</h2><div class="chart-box"><canvas id="statsTrend"></canvas></div></div>
+    <div class="card" id="shooting-trend-card"><h2>Shooting % Trend</h2><div class="chart-box"><canvas id="shootingTrend"></canvas></div></div>
+    ${!avg.games_played && !shooting.by_type.length ? '<div class="empty">No data yet. Start by recording some games!</div>' : ''}`;
+}
+
+function initStatsCharts() {
+  const shooting = DB.getShootingStats();
+  const trends = DB.getTrends();
+
+  if (shooting.by_type.length) {
+    const ctx = document.getElementById('shootingBar');
+    if (ctx) {
+      charts.push(new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: shooting.by_type.map(s => s.shot_type.toUpperCase()),
+          datasets: [
+            { label: 'Made', data: shooting.by_type.map(s => s.made), backgroundColor: '#2e7d32' },
+            { label: 'Missed', data: shooting.by_type.map(s => s.total - s.made), backgroundColor: '#c62828' },
+          ]
+        },
+        options: { responsive: true, maintainAspectRatio: false, scales: { x: { stacked: true }, y: { stacked: true } } }
+      }));
+    }
+  }
+
+  const gt = trends.game_trends;
+  if (gt.length >= 2) {
+    const ctx = document.getElementById('statsTrend');
+    if (ctx) {
+      charts.push(new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: gt.map(g => g.date),
+          datasets: [
+            { label: 'Points', data: gt.map(g => g.points), borderColor: '#e65100', tension: .3 },
+            { label: 'Rebounds', data: gt.map(g => g.rebounds), borderColor: '#1565c0', tension: .3 },
+            { label: 'Assists', data: gt.map(g => g.assists), borderColor: '#2e7d32', tension: .3 },
+          ]
+        },
+        options: { responsive: true, maintainAspectRatio: false }
+      }));
+    }
+  } else {
+    document.getElementById('stats-trend-card')?.classList.add('hidden');
+  }
+
+  const st = trends.shooting_trends;
+  if (st.length >= 2) {
+    const ctx = document.getElementById('shootingTrend');
+    if (ctx) {
+      charts.push(new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: st.map(g => g.date),
+          datasets: [
+            { label: 'FG%', data: st.map(g => g.fg_pct), borderColor: '#e65100', tension: .3 },
+            { label: '3P%', data: st.map(g => g.three_pct), borderColor: '#1565c0', tension: .3 },
+          ]
+        },
+        options: { responsive: true, maintainAspectRatio: false, scales: { y: { min: 0, max: 100, ticks: { callback: v => v + '%' } } } }
+      }));
+    }
+  } else {
+    document.getElementById('shooting-trend-card')?.classList.add('hidden');
+  }
+}
+
+// --- Utils ---
+function esc(str) {
+  const d = document.createElement('div');
+  d.textContent = str || '';
+  return d.innerHTML;
+}
+
+// --- Init ---
+showPage('dashboard');
+</script>
+</body>
+</html>
