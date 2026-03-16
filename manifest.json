@@ -1,0 +1,16 @@
+{
+  "name": "Basketball Stats Tracker",
+  "short_name": "B-Stats",
+  "description": "バスケットボールのスタッツを記録・分析するアプリ",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#fafafa",
+  "theme_color": "#e65100",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏀</text></svg>",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
