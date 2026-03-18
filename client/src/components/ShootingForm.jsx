@@ -10,37 +10,66 @@ export default function ShootingForm() {
   const [players, setPlayers] = useState([]);
   const [gameId, setGameId] = useState('');
   const [playerId, setPlayerId] = useState('');
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [recording, setRecording] = useState(false);
 
   useEffect(() => {
-    fetch('/api/games').then(r => r.json()).then(setGames);
-    fetch('/api/players').then(r => r.json()).then(setPlayers);
+    Promise.all([
+      fetch('/api/games').then(r => r.ok ? r.json() : []),
+      fetch('/api/players').then(r => r.ok ? r.json() : []),
+    ]).then(([g, p]) => {
+      setGames(g);
+      setPlayers(p);
+    }).catch(err => {
+      console.error(err);
+      setError('Failed to load data.');
+    }).finally(() => setLoading(false));
   }, []);
 
   const recordShot = async (made) => {
-    const body = {
-      game_id: gameId || null,
-      shot_type: shotType,
-      made,
-      zone: shotType === 'ft' ? null : zone,
-      player_id: playerId || null,
-    };
-    const res = await fetch('/api/shots', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body),
-    });
-    if (res.ok) {
+    if (recording) return;
+    setRecording(true);
+    setError(null);
+    try {
+      const body = {
+        game_id: gameId || null,
+        shot_type: shotType,
+        made,
+        zone: shotType === 'ft' ? null : zone,
+        player_id: playerId || null,
+      };
+      const res = await fetch('/api/shots', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error || 'Failed to record shot');
+      }
       const data = await res.json();
       const player = playerId ? players.find(p => p.id === Number(playerId)) : null;
       setLog(prev => [{ id: data.id, shot_type: shotType, made, zone: body.zone, playerName: player?.name, time: new Date().toLocaleTimeString() }, ...prev]);
       setZone(null);
+    } catch (err) {
+      console.error(err);
+      setError(err.message);
+    } finally {
+      setRecording(false);
     }
   };
 
   const undoLast = async () => {
     if (log.length === 0) return;
-    await fetch(`/api/shots/${log[0].id}`, { method: 'DELETE' });
-    setLog(prev => prev.slice(1));
+    try {
+      const res = await fetch(`/api/shots/${log[0].id}`, { method: 'DELETE' });
+      if (!res.ok) throw new Error('Failed to undo');
+      setLog(prev => prev.slice(1));
+    } catch (err) {
+      console.error(err);
+      setError('Failed to undo last shot.');
+    }
   };
 
   const summary = (type) => {
@@ -63,23 +92,32 @@ export default function ShootingForm() {
     if (s.made) zoneMap[s.zone].made++;
   }
 
+  if (loading) return <div className="spinner" role="status" aria-label="Loading shooting form" />;
+
   return (
     <>
       <h1>Shooting Record</h1>
 
+      {error && (
+        <div className="error-banner" role="alert">
+          <span>{error}</span>
+          <button onClick={() => setError(null)}>Dismiss</button>
+        </div>
+      )}
+
       <div className="card">
         <div className="form-row">
           <div className="form-group">
-            <label>Game (optional)</label>
-            <select value={gameId} onChange={e => setGameId(e.target.value)}>
+            <label htmlFor="shoot-game">Game (optional)</label>
+            <select id="shoot-game" value={gameId} onChange={e => setGameId(e.target.value)}>
               <option value="">Practice (no game)</option>
               {games.map(g => <option key={g.id} value={g.id}>{g.date} vs {g.opponent}</option>)}
             </select>
           </div>
           {players.length > 0 && (
             <div className="form-group">
-              <label>Player (optional)</label>
-              <select value={playerId} onChange={e => setPlayerId(e.target.value)}>
+              <label htmlFor="shoot-player">Player (optional)</label>
+              <select id="shoot-player" value={playerId} onChange={e => setPlayerId(e.target.value)}>
                 <option value="">Not specified</option>
                 {players.map(p => <option key={p.id} value={p.id}>#{p.number} {p.name}</option>)}
               </select>
@@ -87,9 +125,9 @@ export default function ShootingForm() {
           )}
         </div>
 
-        <div className="shot-type-tabs">
+        <div className="shot-type-tabs" role="tablist" aria-label="Shot type">
           {['2pt', '3pt', 'ft'].map(type => (
-            <button key={type} className={`shot-type-tab ${shotType === type ? 'active' : ''}`} onClick={() => setShotType(type)}>
+            <button key={type} role="tab" aria-selected={shotType === type} className={`shot-type-tab ${shotType === type ? 'active' : ''}`} onClick={() => setShotType(type)}>
               {type.toUpperCase()}
             </button>
           ))}
@@ -98,8 +136,12 @@ export default function ShootingForm() {
         {shotType !== 'ft' && <CourtZones selected={zone} onSelect={setZone} />}
 
         <div className="shot-buttons">
-          <button className="shot-btn made" onClick={() => recordShot(1)}>MADE</button>
-          <button className="shot-btn missed" onClick={() => recordShot(0)}>MISSED</button>
+          <button className="shot-btn made" onClick={() => recordShot(1)} disabled={recording} aria-label="Shot made">
+            {recording ? '...' : 'MADE'}
+          </button>
+          <button className="shot-btn missed" onClick={() => recordShot(0)} disabled={recording} aria-label="Shot missed">
+            {recording ? '...' : 'MISSED'}
+          </button>
         </div>
 
         {log.length > 0 && (

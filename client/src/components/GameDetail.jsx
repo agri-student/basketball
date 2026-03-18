@@ -7,21 +7,54 @@ export default function GameDetail() {
   const navigate = useNavigate();
   const [game, setGame] = useState(null);
   const [zoneStats, setZoneStats] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
-    fetch(`/api/games/${id}`).then(r => r.json()).then(setGame);
-    fetch(`/api/stats/zones?game_id=${id}`).then(r => r.json()).then(setZoneStats);
+    setLoading(true);
+    setError(null);
+    Promise.all([
+      fetch(`/api/games/${id}`).then(r => { if (!r.ok) throw new Error('Game not found'); return r.json(); }),
+      fetch(`/api/stats/zones?game_id=${id}`).then(r => r.ok ? r.json() : []),
+    ]).then(([gameData, zones]) => {
+      setGame(gameData);
+      setZoneStats(zones);
+    }).catch(err => {
+      console.error(err);
+      setError('Failed to load game details.');
+    }).finally(() => setLoading(false));
   }, [id]);
 
   const handleDelete = async () => {
     if (!window.confirm('Delete this game?')) return;
-    await fetch(`/api/games/${id}`, { method: 'DELETE' });
-    navigate('/games');
+    setDeleting(true);
+    try {
+      const res = await fetch(`/api/games/${id}`, { method: 'DELETE' });
+      if (!res.ok) throw new Error('Failed to delete');
+      navigate('/games');
+    } catch (err) {
+      console.error(err);
+      setError('Failed to delete game.');
+      setDeleting(false);
+    }
   };
 
-  if (!game) return <p>Loading...</p>;
+  if (loading) return <div className="spinner" role="status" aria-label="Loading game details" />;
 
-  const result = game.my_score > game.opponent_score ? 'W' : game.my_score < game.opponent_score ? 'L' : '-';
+  if (error && !game) {
+    return (
+      <div className="error-banner" role="alert">
+        <span>{error}</span>
+        <button onClick={() => navigate('/games')}>Back to Games</button>
+      </div>
+    );
+  }
+
+  if (!game) return null;
+
+  const result = game.my_score > game.opponent_score ? 'WIN' : game.my_score < game.opponent_score ? 'LOSS' : 'DRAW';
+  const resultClass = game.my_score > game.opponent_score ? 'win' : game.my_score < game.opponent_score ? 'lose' : '';
 
   const shotSummary = (type) => {
     const shots = (game.shots || []).filter(s => s.shot_type === type);
@@ -34,9 +67,13 @@ export default function GameDetail() {
 
   return (
     <>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <h1>{game.date} vs {game.opponent}</h1>
-        <span className={result === 'W' ? 'win' : result === 'L' ? 'lose' : ''} style={{ fontSize: '1.5rem' }}>
+      {error && (
+        <div className="error-banner" role="alert"><span>{error}</span></div>
+      )}
+
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.5rem' }}>
+        <h1 style={{ margin: 0 }}>{game.date} vs {game.opponent}</h1>
+        <span className={resultClass} style={{ fontSize: '1.5rem' }} role="status" aria-label={`Result: ${result}`}>
           {result} {game.my_score}-{game.opponent_score}
         </span>
       </div>
@@ -44,18 +81,20 @@ export default function GameDetail() {
       {hasQuarters && (
         <div className="card" style={{ marginTop: '1rem' }}>
           <h2>Quarter Scores</h2>
-          <table>
-            <thead>
-              <tr><th></th><th>Q1</th><th>Q2</th><th>Q3</th><th>Q4</th><th style={{ background: '#fff3e0', fontWeight: 700 }}>Total</th></tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td style={{ fontWeight: 600 }}>{game.opponent || 'My Team'}</td>
-                <td>{game.quarter1}</td><td>{game.quarter2}</td><td>{game.quarter3}</td><td>{game.quarter4}</td>
-                <td style={{ background: '#fff3e0', fontWeight: 700 }}>{game.quarter1 + game.quarter2 + game.quarter3 + game.quarter4}</td>
-              </tr>
-            </tbody>
-          </table>
+          <div className="table-scroll">
+            <table>
+              <thead>
+                <tr><th></th><th>Q1</th><th>Q2</th><th>Q3</th><th>Q4</th><th style={{ background: '#fff3e0', fontWeight: 700 }}>Total</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style={{ fontWeight: 600 }}>My Team</td>
+                  <td>{game.quarter1}</td><td>{game.quarter2}</td><td>{game.quarter3}</td><td>{game.quarter4}</td>
+                  <td style={{ background: '#fff3e0', fontWeight: 700 }}>{game.quarter1 + game.quarter2 + game.quarter3 + game.quarter4}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
 
@@ -93,9 +132,11 @@ export default function GameDetail() {
       )}
 
       <div className="actions">
-        <Link to={`/games/${id}/live`} className="btn btn-primary" style={{ background: '#1565c0' }}>Live Record</Link>
+        <Link to={`/games/${id}/live`} className="btn btn-info">Live Record</Link>
         <Link to={`/games/${id}/edit`} className="btn btn-primary">Edit</Link>
-        <button className="btn btn-danger" onClick={handleDelete}>Delete</button>
+        <button className="btn btn-danger" onClick={handleDelete} disabled={deleting}>
+          {deleting ? 'Deleting...' : 'Delete'}
+        </button>
         <Link to="/games" className="btn btn-outline">Back</Link>
       </div>
     </>

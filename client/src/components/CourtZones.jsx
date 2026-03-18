@@ -17,31 +17,45 @@ export default function CourtZones({ selected, onSelect }) {
   const click = (id) => onSelect(selected === id ? null : id);
 
   return (
-    <div style={{ maxWidth: 360, margin: '0 auto 0.75rem' }}>
-      <svg viewBox="0 0 300 280" style={{ width: '100%', height: 'auto' }}>
+    <div style={{ maxWidth: 360, margin: '0 auto 0.75rem' }} role="group" aria-label="Court zone selector">
+      <svg viewBox="0 0 300 280" style={{ width: '100%', height: 'auto' }} role="img" aria-label="Basketball half-court diagram">
         <rect x="10" y="10" width="280" height="260" fill="none" stroke="#666" strokeWidth="2" rx="3" />
         <circle cx="150" cy="35" r="5" fill="none" stroke="#333" strokeWidth="2" />
         <line x1="140" y1="28" x2="160" y2="28" stroke="#333" strokeWidth="2" />
 
-        <rect style={zoneStyle('paint')} x="100" y="28" width="100" height="80" rx="2" onClick={() => click('paint')} />
+        <rect style={zoneStyle('paint')} x="100" y="28" width="100" height="80" rx="2"
+          onClick={() => click('paint')} role="button" tabIndex="0" aria-label="Paint zone" aria-pressed={selected === 'paint'}
+          onKeyDown={e => e.key === 'Enter' && click('paint')} />
         <text x="150" y="72" textAnchor="middle" fontSize="11" fill="#555" fontWeight="600" pointerEvents="none">Paint</text>
 
-        <polygon style={zoneStyle('mid_left')} points="10,28 100,28 100,148 10,148" onClick={() => click('mid_left')} />
+        <polygon style={zoneStyle('mid_left')} points="10,28 100,28 100,148 10,148"
+          onClick={() => click('mid_left')} role="button" tabIndex="0" aria-label="Mid-range left zone" aria-pressed={selected === 'mid_left'}
+          onKeyDown={e => e.key === 'Enter' && click('mid_left')} />
         <text x="55" y="92" textAnchor="middle" fontSize="11" fill="#555" fontWeight="600" pointerEvents="none">Mid L</text>
 
-        <polygon style={zoneStyle('mid_right')} points="200,28 290,28 290,148 200,148" onClick={() => click('mid_right')} />
+        <polygon style={zoneStyle('mid_right')} points="200,28 290,28 290,148 200,148"
+          onClick={() => click('mid_right')} role="button" tabIndex="0" aria-label="Mid-range right zone" aria-pressed={selected === 'mid_right'}
+          onKeyDown={e => e.key === 'Enter' && click('mid_right')} />
         <text x="245" y="92" textAnchor="middle" fontSize="11" fill="#555" fontWeight="600" pointerEvents="none">Mid R</text>
 
-        <polygon style={zoneStyle('mid_top')} points="100,108 200,108 200,148 100,148" onClick={() => click('mid_top')} />
+        <polygon style={zoneStyle('mid_top')} points="100,108 200,108 200,148 100,148"
+          onClick={() => click('mid_top')} role="button" tabIndex="0" aria-label="Mid-range top zone" aria-pressed={selected === 'mid_top'}
+          onKeyDown={e => e.key === 'Enter' && click('mid_top')} />
         <text x="150" y="133" textAnchor="middle" fontSize="11" fill="#555" fontWeight="600" pointerEvents="none">Mid Top</text>
 
-        <polygon style={zoneStyle('three_left')} points="10,148 100,148 100,230 10,230" onClick={() => click('three_left')} />
+        <polygon style={zoneStyle('three_left')} points="10,148 100,148 100,230 10,230"
+          onClick={() => click('three_left')} role="button" tabIndex="0" aria-label="3-point left zone" aria-pressed={selected === 'three_left'}
+          onKeyDown={e => e.key === 'Enter' && click('three_left')} />
         <text x="55" y="193" textAnchor="middle" fontSize="11" fill="#555" fontWeight="600" pointerEvents="none">3PT L</text>
 
-        <polygon style={zoneStyle('three_right')} points="200,148 290,148 290,230 200,230" onClick={() => click('three_right')} />
+        <polygon style={zoneStyle('three_right')} points="200,148 290,148 290,230 200,230"
+          onClick={() => click('three_right')} role="button" tabIndex="0" aria-label="3-point right zone" aria-pressed={selected === 'three_right'}
+          onKeyDown={e => e.key === 'Enter' && click('three_right')} />
         <text x="245" y="193" textAnchor="middle" fontSize="11" fill="#555" fontWeight="600" pointerEvents="none">3PT R</text>
 
-        <polygon style={zoneStyle('three_top')} points="100,148 200,148 200,230 100,230" onClick={() => click('three_top')} />
+        <polygon style={zoneStyle('three_top')} points="100,148 200,148 200,230 100,230"
+          onClick={() => click('three_top')} role="button" tabIndex="0" aria-label="3-point top zone" aria-pressed={selected === 'three_top'}
+          onKeyDown={e => e.key === 'Enter' && click('three_top')} />
         <text x="150" y="193" textAnchor="middle" fontSize="11" fill="#555" fontWeight="600" pointerEvents="none">3PT Top</text>
 
         <path d="M 40,28 L 40,160 Q 150,270 260,160 L 260,28" fill="none" stroke="#999" strokeWidth="1" strokeDasharray="4,3" />

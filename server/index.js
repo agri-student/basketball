@@ -13,6 +13,13 @@ app.use('/api/players', require('./routes/players'));
 app.use('/api/games', require('./routes/games'));
 app.use('/api/shots', require('./routes/shots'));
 app.use('/api/stats', require('./routes/stats'));
+app.use('/api/export', require('./routes/export'));
+
+// Error handling middleware
+app.use((err, req, res, _next) => {
+  console.error('Server error:', err);
+  res.status(500).json({ error: 'Internal server error' });
+});
 
 // Serve React build in production
 const clientBuild = path.join(__dirname, '..', 'client', 'dist');

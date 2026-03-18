@@ -13,60 +13,100 @@ export default function GameLive() {
   const [playerId, setPlayerId] = useState('');
   const [quarter, setQuarter] = useState('1');
   const [log, setLog] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [recording, setRecording] = useState(false);
+  const [undoing, setUndoing] = useState(false);
 
   const load = useCallback(() => {
-    fetch(`/api/games/${id}`).then(r => r.json()).then(data => {
+    setError(null);
+    Promise.all([
+      fetch(`/api/games/${id}`).then(r => { if (!r.ok) throw new Error('Game not found'); return r.json(); }),
+      fetch('/api/players').then(r => { if (!r.ok) throw new Error('Failed to load players'); return r.json(); }),
+    ]).then(([data, playerData]) => {
       setGame(data);
       setShots(data.shots || []);
-    });
-    fetch('/api/players').then(r => r.json()).then(data => {
-      setPlayers(data);
-      if (data.length > 0 && !playerId) setPlayerId(String(data[0].id));
-    });
+      setPlayers(playerData);
+      if (playerData.length > 0 && !playerId) setPlayerId(String(playerData[0].id));
+    }).catch(err => {
+      console.error(err);
+      setError('Failed to load game data.');
+    }).finally(() => setLoading(false));
   }, [id]);
 
   useEffect(() => { load(); }, [load]);
 
-  if (!game) return <div className="empty-state">Loading...</div>;
+  if (loading) return <div className="spinner" role="status" aria-label="Loading live recorder" />;
+
+  if (error && !game) {
+    return (
+      <div className="error-banner" role="alert">
+        <span>{error}</span>
+        <button onClick={load}>Retry</button>
+      </div>
+    );
+  }
+
+  if (!game) return null;
 
   const recordShot = async (made) => {
-    const body = {
-      game_id: Number(id), shot_type: shotType, made,
-      zone: shotType === 'ft' ? null : zone,
-      player_id: playerId ? Number(playerId) : null,
-      quarter: Number(quarter),
-    };
-    const res = await fetch('/api/shots', {
-      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body),
-    });
-    if (res.ok) {
+    if (recording) return;
+    setRecording(true);
+    setError(null);
+    try {
+      const body = {
+        game_id: Number(id), shot_type: shotType, made,
+        zone: shotType === 'ft' ? null : zone,
+        player_id: playerId ? Number(playerId) : null,
+        quarter: Number(quarter),
+      };
+      const res = await fetch('/api/shots', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body),
+      });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error || 'Failed to record shot');
+      }
       const data = await res.json();
       const player = players.find(p => p.id === Number(playerId));
       setLog(prev => [{ id: data.id, ...body, playerName: player?.name, time: new Date().toLocaleTimeString() }, ...prev]);
       load();
       setZone(null);
+    } catch (err) {
+      console.error(err);
+      setError(err.message);
+    } finally {
+      setRecording(false);
     }
   };
 
   const undoLast = async () => {
-    if (!log.length) return;
-    await fetch(`/api/shots/${log[0].id}`, { method: 'DELETE' });
-    setLog(prev => prev.slice(1));
-    load();
+    if (!log.length || undoing) return;
+    setUndoing(true);
+    try {
+      const res = await fetch(`/api/shots/${log[0].id}`, { method: 'DELETE' });
+      if (!res.ok) throw new Error('Failed to undo');
+      setLog(prev => prev.slice(1));
+      load();
+    } catch (err) {
+      console.error(err);
+      setError('Failed to undo last shot.');
+    } finally {
+      setUndoing(false);
+    }
   };
 
   // Build score sheet
   const quarters = [1, 2, 3, 4];
   const playerStats = {};
   for (const p of players) {
-    playerStats[p.id] = { name: p.name, number: p.number, quarters: {}, total: { pts: 0, fg: [0, 0], t3: [0, 0], ft: [0, 0] } };
+    playerStats[p.id] = { name: p.name, number: p.number, quarters: {}, total: { pts: 0, fg: '0/0', t3: '0/0', ft: '0/0' } };
     for (const q of quarters) {
       const qs = shots.filter(s => s.player_id === p.id && s.quarter === q);
       const fg2 = qs.filter(s => s.shot_type === '2pt');
       const t3 = qs.filter(s => s.shot_type === '3pt');
       const ft = qs.filter(s => s.shot_type === 'ft');
-      const pts = fg2.filter(s => s.made).length * 2 + t3.filter(s => s.made).length * 3 + ft.filter(s => s.made).length;
-      playerStats[p.id].quarters[q] = pts;
+      playerStats[p.id].quarters[q] = fg2.filter(s => s.made).length * 2 + t3.filter(s => s.made).length * 3 + ft.filter(s => s.made).length;
     }
     const allPs = shots.filter(s => s.player_id === p.id);
     const fg = allPs.filter(s => s.shot_type !== 'ft');
@@ -84,12 +124,16 @@ export default function GameLive() {
 
   return (
     <>
-      <Link to={`/games/${id}`} style={{ color: 'var(--primary)', fontSize: '0.9rem' }}>← Back to Game</Link>
+      <Link to={`/games/${id}`} style={{ color: 'var(--primary)', fontSize: '0.9rem' }}>Back to Game</Link>
       <h1>{game.date} vs {game.opponent} - Live</h1>
+
+      {error && (
+        <div className="error-banner" role="alert"><span>{error}</span></div>
+      )}
 
       <div className="card">
         <h2>Score Sheet</h2>
-        <div style={{ overflowX: 'auto' }}>
+        <div className="table-scroll">
           <table style={{ minWidth: 500 }}>
             <thead>
               <tr>
@@ -129,22 +173,22 @@ export default function GameLive() {
           <h2>Record Shot</h2>
           <div className="form-row" style={{ marginBottom: '0.75rem' }}>
             <div className="form-group">
-              <label>Player</label>
-              <select value={playerId} onChange={e => setPlayerId(e.target.value)}>
+              <label htmlFor="live-player">Player</label>
+              <select id="live-player" value={playerId} onChange={e => setPlayerId(e.target.value)}>
                 {players.map(p => <option key={p.id} value={p.id}>#{p.number} {p.name}</option>)}
               </select>
             </div>
             <div className="form-group">
-              <label>Quarter</label>
-              <select value={quarter} onChange={e => setQuarter(e.target.value)}>
+              <label htmlFor="live-quarter">Quarter</label>
+              <select id="live-quarter" value={quarter} onChange={e => setQuarter(e.target.value)}>
                 {quarters.map(q => <option key={q} value={q}>Q{q}</option>)}
               </select>
             </div>
           </div>
 
-          <div className="shot-type-tabs">
+          <div className="shot-type-tabs" role="tablist" aria-label="Shot type">
             {['2pt', '3pt', 'ft'].map(t => (
-              <button key={t} className={`shot-type-tab ${shotType === t ? 'active' : ''}`} onClick={() => setShotType(t)}>
+              <button key={t} role="tab" aria-selected={shotType === t} className={`shot-type-tab ${shotType === t ? 'active' : ''}`} onClick={() => setShotType(t)}>
                 {t.toUpperCase()}
               </button>
             ))}
@@ -153,13 +197,19 @@ export default function GameLive() {
           {shotType !== 'ft' && <CourtZones selected={zone} onSelect={setZone} />}
 
           <div className="shot-buttons">
-            <button className="shot-btn made" onClick={() => recordShot(1)}>MADE</button>
-            <button className="shot-btn missed" onClick={() => recordShot(0)}>MISSED</button>
+            <button className="shot-btn made" onClick={() => recordShot(1)} disabled={recording} aria-label="Shot made">
+              {recording ? '...' : 'MADE'}
+            </button>
+            <button className="shot-btn missed" onClick={() => recordShot(0)} disabled={recording} aria-label="Shot missed">
+              {recording ? '...' : 'MISSED'}
+            </button>
           </div>
 
           {log.length > 0 && (
             <div style={{ marginTop: '0.75rem', textAlign: 'right' }}>
-              <button className="btn btn-outline" onClick={undoLast}>Undo Last</button>
+              <button className="btn btn-outline" onClick={undoLast} disabled={undoing}>
+                {undoing ? 'Undoing...' : 'Undo Last'}
+              </button>
             </div>
           )}
         </div>
