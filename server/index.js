@@ -9,6 +9,7 @@ app.use(cors());
 app.use(express.json());
 
 // API routes
+app.use('/api/players', require('./routes/players'));
 app.use('/api/games', require('./routes/games'));
 app.use('/api/shots', require('./routes/shots'));
 app.use('/api/stats', require('./routes/stats'));

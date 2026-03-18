@@ -8,6 +8,7 @@ const defaultForm = {
   opponent_score: '',
   minutes_played: '',
   notes: '',
+  quarters: ['', '', '', ''],
   stats: { points: '', rebounds: '', assists: '', steals: '', blocks: '', turnovers: '', fouls: '' },
 };
 
@@ -27,6 +28,7 @@ export default function GameForm() {
           opponent_score: data.opponent_score,
           minutes_played: data.minutes_played,
           notes: data.notes,
+          quarters: [data.quarter1 || '', data.quarter2 || '', data.quarter3 || '', data.quarter4 || ''],
           stats: {
             points: data.points ?? '',
             rebounds: data.rebounds ?? '',
@@ -43,6 +45,9 @@ export default function GameForm() {
 
   const update = (field, value) => setForm(f => ({ ...f, [field]: value }));
   const updateStat = (field, value) => setForm(f => ({ ...f, stats: { ...f.stats, [field]: value } }));
+  const updateQuarter = (i, value) => setForm(f => {
+    const q = [...f.quarters]; q[i] = value; return { ...f, quarters: q };
+  });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -51,6 +56,7 @@ export default function GameForm() {
       my_score: Number(form.my_score) || 0,
       opponent_score: Number(form.opponent_score) || 0,
       minutes_played: Number(form.minutes_played) || 0,
+      quarters: form.quarters.map(q => Number(q) || 0),
       stats: Object.fromEntries(Object.entries(form.stats).map(([k, v]) => [k, Number(v) || 0])),
     };
 
@@ -98,6 +104,21 @@ export default function GameForm() {
             <input type="number" min="0" value={form.minutes_played} onChange={e => update('minutes_played', e.target.value)} />
           </div>
         </div>
+
+        <h2>Quarter Scores (My Team)</h2>
+        <div className="form-row">
+          {[0, 1, 2, 3].map(i => (
+            <div className="form-group" key={i}>
+              <label>Q{i + 1}</label>
+              <input type="number" min="0" value={form.quarters[i]} onChange={e => updateQuarter(i, e.target.value)} />
+            </div>
+          ))}
+        </div>
+        {form.quarters.some(q => q) && (
+          <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '0.75rem' }}>
+            Total: {form.quarters.reduce((a, q) => a + (Number(q) || 0), 0)}
+          </div>
+        )}
 
         <h2>Player Stats</h2>
         <div className="form-row">

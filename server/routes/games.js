@@ -30,11 +30,11 @@ router.get('/:id', (req, res) => {
 
 // POST /api/games - 試合登録
 router.post('/', (req, res) => {
-  const { date, opponent, my_score, opponent_score, minutes_played, notes, stats } = req.body;
+  const { date, opponent, my_score, opponent_score, minutes_played, notes, stats, quarters } = req.body;
 
   const insertGame = db.prepare(`
-    INSERT INTO games (date, opponent, my_score, opponent_score, minutes_played, notes)
-    VALUES (?, ?, ?, ?, ?, ?)
+    INSERT INTO games (date, opponent, my_score, opponent_score, minutes_played, notes, quarter1, quarter2, quarter3, quarter4)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `);
 
   const insertStats = db.prepare(`
@@ -43,7 +43,8 @@ router.post('/', (req, res) => {
   `);
 
   const transaction = db.transaction(() => {
-    const result = insertGame.run(date, opponent || '', my_score || 0, opponent_score || 0, minutes_played || 0, notes || '');
+    const q = quarters || [0, 0, 0, 0];
+    const result = insertGame.run(date, opponent || '', my_score || 0, opponent_score || 0, minutes_played || 0, notes || '', q[0] || 0, q[1] || 0, q[2] || 0, q[3] || 0);
     const gameId = result.lastInsertRowid;
 
     if (stats) {
@@ -60,17 +61,18 @@ router.post('/', (req, res) => {
 
 // PUT /api/games/:id - 試合更新
 router.put('/:id', (req, res) => {
-  const { date, opponent, my_score, opponent_score, minutes_played, notes, stats } = req.body;
+  const { date, opponent, my_score, opponent_score, minutes_played, notes, stats, quarters } = req.body;
   const { id } = req.params;
 
   const existing = db.prepare('SELECT id FROM games WHERE id = ?').get(id);
   if (!existing) return res.status(404).json({ error: 'Game not found' });
 
   const transaction = db.transaction(() => {
+    const q = quarters || [0, 0, 0, 0];
     db.prepare(`
-      UPDATE games SET date = ?, opponent = ?, my_score = ?, opponent_score = ?, minutes_played = ?, notes = ?
+      UPDATE games SET date = ?, opponent = ?, my_score = ?, opponent_score = ?, minutes_played = ?, notes = ?, quarter1 = ?, quarter2 = ?, quarter3 = ?, quarter4 = ?
       WHERE id = ?
-    `).run(date, opponent || '', my_score || 0, opponent_score || 0, minutes_played || 0, notes || '', id);
+    `).run(date, opponent || '', my_score || 0, opponent_score || 0, minutes_played || 0, notes || '', q[0] || 0, q[1] || 0, q[2] || 0, q[3] || 0, id);
 
     if (stats) {
       db.prepare('DELETE FROM player_stats WHERE game_id = ?').run(id);

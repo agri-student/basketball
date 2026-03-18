@@ -75,4 +75,23 @@ router.get('/trends', (req, res) => {
   res.json({ game_trends: gameTrends, shooting_trends: shootingTrends });
 });
 
+// GET /api/stats/zones - ゾーン別シュート成功率
+router.get('/zones', (req, res) => {
+  const { game_id } = req.query;
+  let query = `
+    SELECT zone, COUNT(*) as total, SUM(made) as made,
+      ROUND(CAST(SUM(made) AS REAL) / NULLIF(COUNT(*), 0) * 100, 1) as percentage
+    FROM shots
+    WHERE zone IS NOT NULL AND shot_type IN ('2pt', '3pt')
+  `;
+  const params = [];
+  if (game_id) {
+    query += ' AND game_id = ?';
+    params.push(game_id);
+  }
+  query += ' GROUP BY zone';
+  const stats = db.prepare(query).all(...params);
+  res.json(stats);
+});
+
 module.exports = router;

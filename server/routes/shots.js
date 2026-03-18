@@ -4,7 +4,7 @@ const db = require('../db');
 
 // POST /api/shots - シュート記録追加
 router.post('/', (req, res) => {
-  const { game_id, shot_type, made } = req.body;
+  const { game_id, shot_type, made, zone, player_id, quarter } = req.body;
 
   if (!['2pt', '3pt', 'ft'].includes(shot_type)) {
     return res.status(400).json({ error: 'Invalid shot_type. Must be 2pt, 3pt, or ft' });
@@ -14,8 +14,8 @@ router.post('/', (req, res) => {
   }
 
   const result = db.prepare(
-    'INSERT INTO shots (game_id, shot_type, made) VALUES (?, ?, ?)'
-  ).run(game_id || null, shot_type, made);
+    'INSERT INTO shots (game_id, shot_type, made, zone, player_id, quarter) VALUES (?, ?, ?, ?, ?, ?)'
+  ).run(game_id || null, shot_type, made, zone || null, player_id || null, quarter || null);
 
   res.status(201).json({ id: result.lastInsertRowid });
 });
@@ -28,13 +28,13 @@ router.post('/bulk', (req, res) => {
   }
 
   const insert = db.prepare(
-    'INSERT INTO shots (game_id, shot_type, made) VALUES (?, ?, ?)'
+    'INSERT INTO shots (game_id, shot_type, made, zone, player_id, quarter) VALUES (?, ?, ?, ?, ?, ?)'
   );
 
   const transaction = db.transaction(() => {
     const ids = [];
     for (const shot of shots) {
-      const result = insert.run(shot.game_id || null, shot.shot_type, shot.made);
+      const result = insert.run(shot.game_id || null, shot.shot_type, shot.made, shot.zone || null, shot.player_id || null, shot.quarter || null);
       ids.push(result.lastInsertRowid);
     }
     return ids;

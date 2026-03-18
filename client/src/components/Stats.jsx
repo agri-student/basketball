@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import ZoneStats from './ZoneStats';
 import { Line, Bar } from 'react-chartjs-2';
 import {
   Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement,
@@ -11,16 +12,19 @@ export default function Stats() {
   const [averages, setAverages] = useState(null);
   const [shooting, setShooting] = useState(null);
   const [trends, setTrends] = useState(null);
+  const [zoneStats, setZoneStats] = useState([]);
 
   useEffect(() => {
     Promise.all([
       fetch('/api/stats/averages').then(r => r.json()),
       fetch('/api/stats/shooting').then(r => r.json()),
       fetch('/api/stats/trends').then(r => r.json()),
-    ]).then(([avg, shoot, trend]) => {
+      fetch('/api/stats/zones').then(r => r.json()),
+    ]).then(([avg, shoot, trend, zones]) => {
       setAverages(avg);
       setShooting(shoot);
       setTrends(trend);
+      setZoneStats(zones);
     });
   }, []);
 
@@ -116,6 +120,8 @@ export default function Stats() {
           )}
         </div>
       )}
+
+      <ZoneStats zones={zoneStats} />
 
       {pointsTrend && (
         <div className="card">

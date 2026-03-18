@@ -6,6 +6,7 @@ export default function Layout() {
       <nav>
         <span className="logo">Basketball Stats</span>
         <NavLink to="/" end>Dashboard</NavLink>
+        <NavLink to="/players">Players</NavLink>
         <NavLink to="/games">Games</NavLink>
         <NavLink to="/shooting">Shooting</NavLink>
         <NavLink to="/stats">Stats</NavLink>
